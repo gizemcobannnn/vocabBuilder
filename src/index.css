@@ -3,6 +3,19 @@
 .textWhite{
   color: #ffffff;
 }
+.colorfulButton{
+  color: #ffffff;
+  background: #85AA9F;
+  border: none;
+
+}
+
+.whiteButton{
+  color: #85AA9F;
+  background: #ffffff;
+  border: none;
+  border:#85AA9F 1px solid;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
