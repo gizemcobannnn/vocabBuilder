@@ -25,8 +25,8 @@ export default function Register() {
     // Here you would typically send the values to your backend for registration
   };
   return (
-    <div className= "flex flex-row gap-20 items-start">
-      <div className="bg-[#85AA9F]/10 max-w-md w-full p-6 rounded-lg">
+    <div className= "flex flex-col justify-center items-center min-w-[400px] md:flex-row md:min-w-[720px] gap-10 md:gap-20 mt-15">
+      <div className="bg-[#85AA9F]/10 max-w-sm md:min-w-[400px] lg:max-w-lg w-full pt-8 pr-15 pl-15 pb-8 rounded-4xl">
         <h1 className="text-2xl font-semibold mb-6 text-start">Register</h1>
         <p className="text-justify mb-4">
           To start using our services, please fill out the registration form
@@ -63,15 +63,20 @@ export default function Register() {
               ></ErrorMessage>
             </div>
             <div className="flex flex-col mt-3 font-semibold">
-              <button className="colorfulButton w-full h-13 rounded-2xl">Register</button>
-              <button className="border-none underline text-[#85AA9F] w-full h-13 rounded-2xl">Login</button>
+              <button type="submit" className="colorfulButton w-full h-13 rounded-2xl">Register</button>
+              <button type="button" className="border-none underline text-[#85AA9F] w-full h-13 rounded-2xl">Login</button>
             </div>
           </Form>
         </Formik>
       </div>
-      <div>
-        <img src={formImage} alt="formImage" />
-      </div>
+<div className="flex rounded-2xl w-full  md:min-w-[300px] md:max-w-[400px] lg:min-w-[400px] lg:max-w-[600px] bg-gray-100 h-[300px] overflow-hidden">
+  <img 
+    src={formImage} 
+    alt="formImage" 
+    className="w-full object-contain" 
+  />
+</div>
+
     </div>
   );
 }

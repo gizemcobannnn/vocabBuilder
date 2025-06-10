@@ -2,7 +2,7 @@ import React from "react";
 import craft from "../assets/Craftwork.svg";
 import user from "../assets/gridicons_user.svg";
 import { NavLink } from "react-router-dom";
-import { FaLongArrowAltRight } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa6";
 
 export default function Header() {
   return (
@@ -23,7 +23,7 @@ export default function Header() {
         </div>
         <div className="flex flex-row gap-2 items-center  px-4 py-2 font-semibold">
           <button>Logout</button>
-          <FaLongArrowAltRight className="text-[12px]" />
+          <FaArrowRight className="text-[12px]" />
         </div>
       </div>
     </div>
