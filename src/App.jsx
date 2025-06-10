@@ -6,12 +6,13 @@ import AddWord from './components/AddWord'
 import Header from './components/Header'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import Recommend from './pages/Recommend'
 function App() {
 
   return (
     <>
       <Header/>
-      <Login />
+      <Recommend />
       {/**<AppRoutes /> */}
     </>
   )
