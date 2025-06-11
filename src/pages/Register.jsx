@@ -1,6 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import formImage from "../assets/illustration.svg";
+import { BiShow, BiHide } from "react-icons/bi";
+import { useState } from "react";
 export default function Register() {
   const validationRegister = Yup.object().shape({
     name: Yup.string()
@@ -17,6 +19,7 @@ export default function Register() {
       .max(15, "Password must be at most 15 characters")
       .required("Required"),
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (values, action) => {
     const { name, email, password } = values;
@@ -54,8 +57,13 @@ export default function Register() {
                 className="text-red-500 text-sm"
               ></ErrorMessage>
             </div>
-            <div className="gap-3 flex flex-col">
-              <Field name="password" placeholder="Pasword" className="border border-[#121417]/10 p-3 rounded-xl"  />
+            <div className="gap-3 flex flex-col relative">
+              <Field name="password" placeholder="Pasword" className="border border-[#121417]/10 p-3 rounded-xl"
+                type={showPassword ? "text" : "password"
+                }  />
+              <button onClick={()=>setShowPassword(!showPassword)} className="absolute right-4 top-4 text-gray-500">
+                {showPassword ? (<BiShow className="text-black" />) : (<BiHide className="text-black" />)}
+              </button>
               <ErrorMessage
                 name="password"
                 component="div"
