@@ -9,12 +9,13 @@ import Login from './pages/Login'
 import Recommend from './pages/Recommend'
 import Dictionary from './pages/Dictionary'
 import Welldone from './components/Welldone'
+import Training from './pages/Training'
 function App() {
 
   return (
     <>
       <Header/>
-      <Welldone />
+      <Training />
       {/**<AppRoutes /> */}
     </>
   )

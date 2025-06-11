@@ -4,9 +4,12 @@
   color: #ffffff;
 }
 .colorfulButton{
-  color: #ffffff;
+  color: #FCFCFC;
+  font-size: 18px;
   background: #85AA9F;
   border: none;
+  border-radius: 30px;
+  padding: 14px 80px;
 
 }
 
