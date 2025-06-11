@@ -32,26 +32,33 @@ export default function Recommend() {
       </div>
       <div className="flex flex-row items-center justify-between w-300">
         <table className="min-w-full border border-gray-300">
-  <thead>
-    <tr className="bg-gray-100">
-      <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-      <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
-      <th className="border border-gray-300 px-4 py-2 text-left">Role</th>
-      <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td className="border border-gray-300 px-4 py-2">Gizem Genç</td>
-      <td className="border border-gray-300 px-4 py-2">gizem@example.com</td>
-      <td className="border border-gray-300 px-4 py-2">Admin</td>
-      <td className="border border-gray-300 px-4 py-2">Active</td>
-    </tr>
-
-
-  </tbody>
-</table>
-
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Name
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Email
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Role
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">Gizem Genç</td>
+              <td className="border border-gray-300 px-4 py-2">
+                gizem@example.com
+              </td>
+              <td className="border border-gray-300 px-4 py-2">Admin</td>
+              <td className="border border-gray-300 px-4 py-2">Active</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </>
   );
