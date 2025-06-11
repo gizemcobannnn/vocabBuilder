@@ -1,5 +1,7 @@
 import { BsSearch } from "react-icons/bs";
-
+import english from "../assets/english.svg";
+import ukrainian from "../assets/ukraine.svg";
+import { FaArrowRight } from "react-icons/fa6";
 export default function Dictionary() {
   return (
     <div>
@@ -28,6 +30,45 @@ export default function Dictionary() {
           <p>Train oneself </p>
         </div>
       </div>
+            <div className="flex flex-row items-center justify-between w-300">
+              <table className="min-w-full border border-gray-300">
+                <thead>
+                  <tr className="bg-[#85AA9F]/10">
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      <div className="flex flex-row justify-between items-center gap-2">
+                        <p>Word</p>
+                        <img src={english} alt="english" />
+                      </div>
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      <div className="flex flex-row justify-between items-center gap-2">
+                        <p>Translation</p>
+                        <img src={ukrainian} alt="ukrainian" />
+                      </div>
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Category
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">Gizem Genç</td>
+                    <td className="border border-gray-300 px-4 py-2">Translation</td>
+                    <td className="border border-gray-300 px-4 py-2">Verb</td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <button className="text-slate-600">
+                        Add to dictionary
+                        <FaArrowRight className="inline-block ml-1 text-[12px]" />
+                      </button>
+                    </td>{" "}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
     </div>
   );
 }
