@@ -10,8 +10,8 @@ import Recommend from './pages/Recommend'
 import Dictionary from './pages/Dictionary'
 import Welldone from './components/Welldone'
 import Training from './pages/Training'
+import SideMenu from './components/SideMenu'
 function App() {
-
   return (
     <>
       <Header/>
