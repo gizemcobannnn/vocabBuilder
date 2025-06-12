@@ -78,7 +78,7 @@ export const statistics = createAsyncThunk("words/statistics",async(thunkAPI)=>{
     }
 })
 
-export const getTasks = createAsyncThunk("words/getTasks",async(thunkAPI)=>{
+export const getTasks= createAsyncThunk("words/getTasks",async(thunkAPI)=>{
     try{
         const response = await axios.get(`${API_URL}/words/tasks`);
         return response.data;
@@ -87,7 +87,7 @@ export const getTasks = createAsyncThunk("words/getTasks",async(thunkAPI)=>{
     }
 })
 
-export const createAnswer = createAsyncThunk("words/createAnswer",async(thunkAPI)=>{
+export const createAnswer  = createAsyncThunk("words/createAnswer",async(thunkAPI)=>{
     try{
         const response = await axios.post(`${API_URL}/words/answers`);
         return response.data;
