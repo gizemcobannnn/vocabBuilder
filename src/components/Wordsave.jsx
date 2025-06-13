@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import createWord from '../controllers/words/createWord';
 
 export default function Wordsave() {
   const validationForm = Yup.object().shape({
@@ -12,9 +13,9 @@ export default function Wordsave() {
       .required("Required"),
   });
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async(values) => {
     console.log("Form submitted with values:", values);
-    // Here you can handle the form submission, e.g., send data to an API
+    const createdWord = await createWord();
   };
   return (
     <div className="bg-[#85AA9F] rounded-3xl p-12">

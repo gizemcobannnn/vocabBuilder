@@ -2,7 +2,12 @@ import { BsSearch } from "react-icons/bs";
 import english from "../assets/english.svg";
 import ukrainian from "../assets/ukraine.svg";
 import { FaArrowRight } from "react-icons/fa6";
+import { useState } from "react";
 export default function Dictionary() {
+  const [selectedWordType, setSelectedWordType] = useState("verb");
+  const handleSelect = (e) => {
+    setSelectedWordType(e.target.value);
+  };
   return (
     <div>
       <div className="flex flex-row items-center justify-between w-300">
@@ -11,7 +16,7 @@ export default function Dictionary() {
             <input type="text" placeholder="Find the word " className="w-36" />
             <BsSearch />
           </div>
-          <select name="wordType" id="wordType">
+          <select name="wordType" id="wordType" onChange={handleSelect} value={selectedWordType} >
             <option value="verb">Verb</option>
             <option value="participle">Participle</option>
             <option value="noun">Noun</option>

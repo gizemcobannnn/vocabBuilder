@@ -1,6 +1,14 @@
+import { useState } from "react";
 import Wordsave from "./Wordsave";
-
 export default function AddWord() {
+  const [selectedWordType, setselectedWordType] = useState("");
+  const [selectedCategory, setselectedCategory] = useState("");
+  const handleSelect = (e) => {
+    setselectedWordType(e.target.value);
+  };
+  const handleCategory = (e) => {
+    setselectedCategory(e.target.value);
+  };
   return (
     <div className="flex flex-col items-start bg-[#85AA9F] rounded-3xl w-150">
       <div className="flex flex-col gap-5 pl-12 pt-12 pr-12 items-start">
@@ -15,6 +23,8 @@ export default function AddWord() {
           name="wordtype"
           id="wordtype"
           className="text-white bg-[#85AA9F] border border-white/40 rounded-xl p-2 w-40"
+          onChange={handleSelect}
+          valıue={selectedWordType}
         >
           <option value="Verb">Verb</option>
           <option value="Participle">Participle</option>
@@ -26,15 +36,24 @@ export default function AddWord() {
         </select>
         <div className="flex flex-row gap-4 items-center text-white">
           <label htmlFor="noun">
-            <input type="radio" name="wordtype" value="noun" id="noun" />{" "}
+            <input
+              type="radio"
+              name="wordCategory"
+              value="irregular"
+              id="irregular"
+              checked={selectedCategory === "irregular"}
+              onChange={handleCategory}
+            />{" "}
             Regular
           </label>
           <label htmlFor="adjective">
             <input
               type="radio"
-              name="wordtype"
-              value="adjective"
-              id="adjective"
+              name="wordCategory"
+              value="irregular"
+              id="irregular"
+              checked={selectedCategory === "irregular"}
+              onChange={handleCategory}
             />{" "}
             Irregular
           </label>

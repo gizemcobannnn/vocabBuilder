@@ -2,8 +2,18 @@ import { BsSearch } from "react-icons/bs";
 import english from "../assets/english.svg";
 import ukrainian from "../assets/ukraine.svg";
 import { FaArrowRight } from "react-icons/fa6";
+import { useState } from "react";
 
 export default function Recommend() {
+  const [selectedWordType, setSelectedWordType] = useState("Verb");
+  const [selectedCategory, setselectedCategory] = useState("Regular");
+  const handleWordTypeChange = (e) => {
+    setSelectedWordType(e.target.value);
+  }
+
+  const handleCategoryChange = (e) => {
+    setselectedCategory(e.target.value); 
+  }
   return (
     <>
       <div className="flex flex-row items-center justify-between w-300">
@@ -16,15 +26,21 @@ export default function Recommend() {
             name="selectword"
             id="selectword"
             className="border border-[#121417]/10 w-30 rounded-lg p-1"
+            onChange={handleWordTypeChange}
+            value={ selectedWordType}
           >
             <option value="Verb">Verb</option>
           </select>
           <div className="flex flex-row gap-4 items-center justify-center ">
             <label htmlFor="regular">
-              <input id="regular" type="radio" /> Regular
+              <input id="regular" type="radio" 
+              onChange={handleCategoryChange}
+              checked={selectedCategory === "regular"} /> Regular
             </label>
             <label htmlFor="irregular">
-              <input id="irregular" type="radio" /> Irregular
+              <input id="irregular" type="radio" 
+              onChange={handleCategoryChange}
+              checked={selectedCategory==="irregular"}/> Irregular
             </label>
           </div>
         </div>
