@@ -1,7 +1,10 @@
+import wordsModel from "../../models/words.js";
 export const getTasks = async(req,res)=>{
+  const task= req.query.task || "en"; // Default to "en" if no task is specified
+  const words = await wordsModel.find({ task: "en" }).select("ua _id task");
     res.status(200).json(
         {
-  "words": [
+  words: words///[
     {
       "_id": "64c44e7b9307a6e92f3a25c3",
       "ua": "знати",

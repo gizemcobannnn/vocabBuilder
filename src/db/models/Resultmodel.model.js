@@ -3,7 +3,6 @@ import {Schema} from 'mongoose';
 const ResultsSchema = new Schema({
   id:{
     type:Object,
-
   },
   en:{
     type:String,
@@ -35,3 +34,6 @@ const ResultsSchema = new Schema({
     timestamps: true,
     versionKey:false
 })
+
+const resultsModel = new Schema('resultsModel', ResultsSchema);
+export { resultsModel };

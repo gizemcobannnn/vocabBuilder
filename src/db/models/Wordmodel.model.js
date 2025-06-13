@@ -32,5 +32,5 @@ const myWordsSchema = new mongoose.Schema({
   versionKey: false   
 });
 
-const myWords = mongoose.model('mywords', myWordsSchema);
-export { myWords };
+const wordsModel = mongoose.model('wordsModel', myWordsSchema);
+export { wordsModel };
