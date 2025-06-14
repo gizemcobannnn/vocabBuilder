@@ -1,97 +1,184 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const API_URL="https://vocab-builder-backend.p.goit.global/api"
+const API_URL = "https://vocab-builder-backend.p.goit.global/api";
 
-export const fetchCategories = createAsyncThunk('words/fetchCategories',async(thunkAPI)=>{
-    try{
-        const response = await axios.get(`${API_URL}/words/categories`);
-        return response.data;
-    }catch(error){
-        return thunkAPI.rejectWithValue(error.response.data);
+export const fetchCategories = createAsyncThunk(
+  "words/fetchCategories",
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.get(`${API_URL}/words/categories`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-});
+  }
+);
 
-export const createWord = createAsyncThunk("words/createWord",async(thunkAPI)=>{
-    try{
-        const response = await axios.post(`${API_URL}/words/create`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data);
+export const createWord = createAsyncThunk(
+  "words/createWord",
+  async (data, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.post(`${API_URL}/words/create`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-});
+  }
+);
 
-export const createForeignWord = createAsyncThunk("words/createForeignWord",async(thunkAPI)=>{
-    try{
-        URLSearchParams();
-        const response = await axios.post(`${API_URL}/words/create/{id}`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data);
+export const createForeignWord = createAsyncThunk(
+  "words/createForeignWord",
+  async ({ id, data }, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.post(`${API_URL}/words/create/${id}`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-});
+  }
+);
 
-export const editWord = createAsyncThunk("words/editWord",async(thunkAPI)=>{
-    try{
-        URLSearchParams();
-        const response = await axios.patch(`${API_URL}/words/edit/{id}`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data);
+export const editWord = createAsyncThunk(
+  "words/editWord",
+  async ({ id, updatedData }, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.patch(`${API_URL}/words/edit/${id}`, updatedData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-});
+  }
+);
 
+export const getWords = createAsyncThunk(
+  "words/getWords",
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
 
-export const getWords = createAsyncThunk("words/getWords",async(thunkAPI)=>{
-    try{
-        const response = await axios.get(`${API_URL}/words/all`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data);
+      const response = await axios.get(`${API_URL}/words/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-});
+  }
+);
 
-export const getOwnWord = createAsyncThunk("words/getOwnWord",async(thunkAPI)=>{
-    try{
-        const response= await axios.get(`${API_URL}/words/own`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data);
-    }
-})
+export const getOwnWord = createAsyncThunk(
+  "words/getOwnWord",
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
 
-export const deleteWord = createAsyncThunk("words/deleteWord",async(thunkAPI)=>{
-    try{
-        const response= await axios.delete(`${API_URL}/words/delete/{id}`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data);
-    }
-})
+      const response = await axios.get(`${API_URL}/words/own`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-export const statistics = createAsyncThunk("words/statistics",async(thunkAPI)=>{
-    try{
-        const response = await axios.get(`${API_URL}/words/statistics`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data)
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-})
+  }
+);
 
-export const getTasks= createAsyncThunk("words/getTasks",async(thunkAPI)=>{
-    try{
-        const response = await axios.get(`${API_URL}/words/tasks`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data)
-    }
-})
+export const deleteWord = createAsyncThunk(
+  "words/deleteWord",
+  async (id, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
 
-export const createAnswer  = createAsyncThunk("words/createAnswer",async(thunkAPI)=>{
-    try{
-        const response = await axios.post(`${API_URL}/words/answers`);
-        return response.data;
-    }catch(error){
-        thunkAPI.rejectWithValue(error.response.data)
+      const response = await axios.delete(`${API_URL}/words/delete/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-})
+  }
+);
+
+export const statistics = createAsyncThunk(
+  "words/statistics",
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.get(`${API_URL}/words/statistics`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getTasks = createAsyncThunk(
+  "words/getTasks",
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.get(`${API_URL}/words/tasks`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const createAnswer = createAsyncThunk(
+  "words/createAnswer",
+  async (answerData, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      const response = await axios.post(`${API_URL}/words/answers`, answerData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
