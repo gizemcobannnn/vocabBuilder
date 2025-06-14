@@ -1,9 +1,12 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import createWord from '../controllers/words/createWord';
+import {createWord} from "../redux/vocabs/vocabOps.js";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function Wordsave() {
+    const dispatch = useDispatch();
   const validationForm = Yup.object().shape({
     word1: Yup.string()
       .min(2, "Word must be 2 characters or more")
@@ -13,10 +16,17 @@ export default function Wordsave() {
       .required("Required"),
   });
 
-  const handleSubmit = async(values) => {
-    console.log("Form submitted with values:", values);
-    const createdWord = await createWord();
+  const handleSubmit = async (values, { resetForm }) => {
+    const {word1,word2} =values;
+    try {
+      await dispatch(createWord({word1,word2}));
+      resetForm(); // başarılıysa formu temizle
+      toast.success("Word is added.")
+    } catch (error) {
+      console.error("Word creation failed", error);
+    }
   };
+  
   return (
     <div className="bg-[#85AA9F] rounded-3xl p-12">
       <Formik
@@ -35,6 +45,7 @@ export default function Wordsave() {
                   name="word1"
                   type="text"
                   className="w-65 textWhite border border-white/40 rounded-xl p-2"
+                  placeholder="word2"
                 />
 
                 <div className="h-5 w-5 rounded-xl"></div>
@@ -53,6 +64,7 @@ export default function Wordsave() {
                   name="word2"
                   type="text"
                   className=" w-65 textWhite border border-white/40 rounded-xl  p-2"
+                  placeholder="word2" 
                 />
                 <div className="h-5 w-5 rounded-xl"></div>
                 <p className="textWhite">English</p>
@@ -64,10 +76,13 @@ export default function Wordsave() {
               />
             </div>
             <div className="flex flex-row justify-around gap-4">
-              <button className="border border-white/40 rounded-2xl w-full p-2 bg-white font-semibold ">
+              <button 
+              type="submit"
+              className="border border-white/40 rounded-2xl w-full p-2 bg-white font-semibold ">
                 Save
               </button>
-              <button className="border border-white/40 rounded-2xl w-full p-2 textWhite  font-semibold ">
+              <button
+              type="button" className="border border-white/40 rounded-2xl w-full p-2 textWhite  font-semibold ">
                 Cancel
               </button>
             </div>

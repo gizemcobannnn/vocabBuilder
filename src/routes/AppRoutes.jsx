@@ -13,7 +13,7 @@ export default function AppRoutes() {
     <>
       <Suspense fallback={null}>
         <Routes>
-            <Route path="/*" element={<Wordsave />}></Route>
+            <Route path="/addWord" element={<Wordsave />}></Route>
             <Route path="/learnedWords" element={<LearnedWords />}></Route>
             <Route path="/dictionary" element={<Dictinory />}></Route>
             <Route path="/recommend" element={<Recomment />}></Route>

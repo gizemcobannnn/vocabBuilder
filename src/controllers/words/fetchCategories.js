@@ -1,6 +1,4 @@
 //import { MyProducts } from '../../db/models/MyProducts.model.js';
-import mongoose from 'mongoose';
-import createHttpError from 'http-errors';
 import { wordsModel } from '../../db/models/Wordmodel.model';
 
 export const fetchCategories= async(req,res)=>{

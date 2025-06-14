@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Wordsave from "./Wordsave";
+
 export default function AddWord() {
   const [selectedWordType, setselectedWordType] = useState("");
   const [selectedCategory, setselectedCategory] = useState("");
@@ -9,6 +10,8 @@ export default function AddWord() {
   const handleCategory = (e) => {
     setselectedCategory(e.target.value);
   };
+
+
   return (
     <div className="flex flex-col items-start bg-[#85AA9F] rounded-3xl w-150">
       <div className="flex flex-col gap-5 pl-12 pt-12 pr-12 items-start">

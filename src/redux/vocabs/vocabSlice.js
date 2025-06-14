@@ -4,7 +4,7 @@ const initialState ={
     name: 'vocabBuilder',
     words: [],
     tasks:[],
-    categories: [],
+    category: "",
     ownWords: [],
     foreignWords: [],
     favorites: [],
@@ -18,7 +18,11 @@ export const wordsSlice = createSlice({
     reducers:{
         setFavorites: (state, action) => {
             state.favorites = action.payload;
+        },
+        setCategory: (state,action) => {
+          state.category = action.payload;
         }
+  
     },
     extraReducers: (builder)=>builder
       .addCase(createAnswer.pending, (state) => {
@@ -119,5 +123,5 @@ export const wordsSlice = createSlice({
 
 })
 
-export const { setFavorites } = wordsSlice.actions;
+export const { setFavorites, setCategory } = wordsSlice.actions;
 export default wordsSlice.reducer;

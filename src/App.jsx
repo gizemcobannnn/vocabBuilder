@@ -11,10 +11,12 @@ import Dictionary from './pages/Dictionary'
 import Welldone from './components/Welldone'
 import Training from './pages/Training'
 import SideMenu from './components/SideMenu'
+import { ToastContainer } from 'react-toastify';
 function App() {
   return (
     <>
       <Header/>
+      <ToastContainer />
       <AppRoutes />
       {/**<AppRoutes /> */}
     </>
