@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import {createWord} from "../redux/vocabs/vocabOps.js";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-
+import ukranian from '../../src/assets/ukraine.svg'
+import english from '../../src/assets/english.svg'
 export default function Wordsave() {
     const dispatch = useDispatch();
   const validationForm = Yup.object().shape({
@@ -15,6 +16,7 @@ export default function Wordsave() {
       .min(2, "Word must be 2 characters or more")
       .required("Required"),
   });
+
 
   const handleSubmit = async (values, { resetForm }) => {
     const {word1,word2} =values;
@@ -48,8 +50,11 @@ export default function Wordsave() {
                   placeholder="word2"
                 />
 
-                <div className="h-5 w-5 rounded-xl"></div>
-                <p className="textWhite">Turkish</p>
+                <div className="rounded-xl ml-2 mt-2 flex flex-row gap-2">
+                  <img src={ukranian} alt="ukranian" className="h-7 w-7" />
+                  <p className="textWhite">Ukrainian</p>
+                </div>
+                
               </div>
               <ErrorMessage
                 name="word1"
@@ -66,8 +71,11 @@ export default function Wordsave() {
                   className=" w-65 textWhite border border-white/40 rounded-xl  p-2"
                   placeholder="word2" 
                 />
-                <div className="h-5 w-5 rounded-xl"></div>
-                <p className="textWhite">English</p>
+                <div className="rounded-xl ml-2 mt-2 flex flex-row gap-2">
+                  <img src={english} alt="english" className="h-7 w-7" />
+                                  <p className="textWhite">English</p>
+
+                </div>
               </div>
               <ErrorMessage
                 name="word2"

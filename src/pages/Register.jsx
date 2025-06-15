@@ -3,7 +3,10 @@ import * as Yup from "yup";
 import formImage from "../assets/illustration.svg";
 import { BiShow, BiHide } from "react-icons/bi";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import {registerUser} from "../redux/auth/authOps";
 export default function Register() {
+  const dispatch= useDispatch();
   const validationRegister = Yup.object().shape({
     name: Yup.string()
       .min(3, "Name must be at least 3 characters")
@@ -24,6 +27,8 @@ export default function Register() {
   const handleSubmit = (values, action) => {
     const { name, email, password } = values;
     console.log("Form submitted with values:", name, email, password);
+    const user=dispatch(registerUser({name,email,password})).unwrap();
+    console.log(user);
     action.resetForm();
     // Here you would typically send the values to your backend for registration
   };

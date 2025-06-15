@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import setToken from "../auth/authSlice";
 const API_URL = "https://vocab-builder-backend.p.goit.global/api";
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { dispatch, rejectWithValue }) => {
@@ -30,7 +31,6 @@ export const registerUser = createAsyncThunk(
         password,
       });
       const token = response.data.token;
-
       dispatch(setToken(token));
       return response.data;
     } catch (error) {

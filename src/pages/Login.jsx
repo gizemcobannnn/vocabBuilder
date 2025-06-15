@@ -3,8 +3,10 @@ import * as Yup from "yup";
 import formImage from "../assets/illustration.svg";
 import { BiShow, BiHide } from "react-icons/bi";
 import { useState } from "react";
-
+import {loginUser} from '../redux/auth/authOps.js'
+import { useDispatch } from "react-redux";
 export default function Login() {
+  const dispatch =  useDispatch();
   const validationLogin = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email format")
@@ -17,9 +19,11 @@ export default function Login() {
       .required("Required"),
   });
 
-  const handleSubmit = (values, action) => {
+  const handleSubmit = async(values, action) => {
     const { email, password } = values;
     console.log("Form submitted with values:", name, email, password);
+    const user=await dispatch(loginUser)({email,password});
+    console.log(user);
     action.resetForm();
     // Here you would typically send the values to your backend for registration
   };
