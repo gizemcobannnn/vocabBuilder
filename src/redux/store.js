@@ -2,16 +2,19 @@ import { persistStore, persistReducer } from 'redux-persist';
 import { configureStore } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { wordsSlice } from './data/dataSlice';
+import authReducer from './auth/authSlice'
 
 const persistWordsConfig = {
     key:"persistedWords",
     storage,
-    whitelist: ["words,favorites"]
+    whitelist: ["words","favorites","token"]
 }
+
 const persistWordReducer = persistReducer(persistWordsConfig, wordsSlice.reducer);
 
 export const store = configureStore({
     reducer: {
+        auth: authReducer,
         words:persistWordReducer
     },
     middleware: (getDefaultMiddleware) =>

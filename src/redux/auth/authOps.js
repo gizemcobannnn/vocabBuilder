@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import setToken from "../auth/authSlice";
+import {setToken} from "./authSlice";
 const API_URL = "https://vocab-builder-backend.p.goit.global/api";
 
 export const loginUser = createAsyncThunk(
@@ -12,7 +12,6 @@ export const loginUser = createAsyncThunk(
         password,
       });
       const token = response.data.token;
-
       dispatch(setToken(token));
       return response.data;
     } catch (error) {

@@ -22,6 +22,7 @@ export default function AppRoutes() {
             <Route path="/dictionary" element={<Dictinory />}></Route>
             <Route path="/recommend" element={<Recomment />}></Route>
             <Route path="/training" element={<Training/>}></Route>
+            <Route path="/*" element={<Dictinory/>}></Route>
         </Routes>
       </Suspense>
     </>
