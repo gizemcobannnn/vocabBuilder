@@ -83,7 +83,7 @@ export default function Recommend() {
                   Add to dictionary
                   <FaArrowRight className="inline-block ml-1 text-[12px]" />
                 </button>
-              </td>{" "}
+              </td>
             </tr>
           </tbody>
         </table>

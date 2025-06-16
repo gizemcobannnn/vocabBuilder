@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const API_URL = "https://vocab-builder-backend.p.goit.global/api";
 
@@ -25,8 +26,7 @@ export const createWord = createAsyncThunk(
   "words/createWord",
   async (data, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
+      const token = useSelector(state=>state.auth.token);
 
       const response = await axios.post(`${API_URL}/words/create`, data, {
         headers: { Authorization: `Bearer ${token}` },

@@ -5,7 +5,9 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { useState } from "react";
 import {loginUser} from '../redux/auth/authOps.js'
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
+  const navigate = useNavigate();
   const dispatch =  useDispatch();
   const validationLogin = Yup.object().shape({
     email: Yup.string()
@@ -25,6 +27,7 @@ export default function Login() {
     const user=await dispatch(loginUser)({email,password});
     console.log(user);
     action.resetForm();
+     setTimeout(() => navigate("/recommend", { replace: true }), 0);
     // Here you would typically send the values to your backend for registration
   };
   const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +43,7 @@ export default function Login() {
           validationSchema={validationLogin}
           onSubmit={handleSubmit}
         >
-          <Form className="flex flex-col gap-3">
+          {({isSubmitting})=>(          <Form className="flex flex-col gap-3">
             <div className="gap-3 flex flex-col">
               <Field
                 name="email"
@@ -80,17 +83,19 @@ export default function Login() {
               <button
                 type="submit"
                 className="colorfulButton w-full h-13 rounded-2xl"
-              >
-                Register
+              >{isSubmitting?"Logging":"Login"}
+                Login
               </button>
               <button
                 type="button"
                 className="border-none underline text-[#85AA9F] w-full h-13 rounded-2xl"
+                onClick={navigate("/recommend",{replace:true})}
               >
-                Login
+                Register
               </button>
             </div>
-          </Form>
+          </Form>)}
+
         </Formik>
       </div>
       <div className="flex rounded-2xl w-full  md:min-w-[300px] md:max-w-[400px] lg:min-w-[400px] lg:max-w-[600px] bg-gray-100 h-[300px] overflow-hidden">

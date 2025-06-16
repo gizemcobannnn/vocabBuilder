@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/signin`, {
+      const response = await axios.post(`${API_URL}/users/signin`, {
         email,
         password,
       });
@@ -25,13 +25,13 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ name, email, password }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/signup`, {
+      const response = await axios.post(`${API_URL}/users/signup`, {
         name,
         email,
         password,
       });
       const token = response.data.token;
-      dispatch(setToken(token));
+      await dispatch(setToken(token));
       return response.data;
     } catch (error) {
       rejectWithValue(error.response.data);
@@ -43,8 +43,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/signout`);
-
+      const response = await axios.post(`${API_URL}/users/signout`);
       dispatch(setToken(null));
       return response.data;
     } catch (error) {
