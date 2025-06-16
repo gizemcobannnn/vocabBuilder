@@ -8,7 +8,7 @@ const initialState = {
     user:null,
     error:null,
     isLoading: false,
-    token:null
+    token: localStorage.getItem("token") || null,
 }
 
 const authSlice = createSlice({
@@ -20,6 +20,11 @@ const authSlice = createSlice({
         },
         setToken:(state,action)=>{
             state.token=action.payload;
+            if(action.payload){
+                localStorage.setItem("token",action.payload);
+            }else{
+                localStorage.removeItem("token");
+            }
         }
     },
     extraReducers: (builder)=>builder

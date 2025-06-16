@@ -10,6 +10,9 @@ const initialState ={
     favorites: [],
     status: 'idle', // idle, loading, succeeded, failed
     error: null,
+    totalPages:1,
+    page:1,
+    perPage:1,
 }
 
 export const wordsSlice = createSlice({
@@ -53,6 +56,16 @@ export const wordsSlice = createSlice({
       // getWords
       .addCase(getWords.fulfilled, (state, action) => {
         state.words = action.payload;
+        state.totalPages=action.totalPages;
+        state.page= action.page;
+        state.perPage=action.perPage;
+      })
+      .addCase(getWords.rejected,(state,action)=>{
+        state.words=action.payload.results;
+        state.error=action.payload;
+      })
+      .addCase(getWords.pending,(state)=>{
+        state.isLoading=true;
       })
 
       // getOwnWord

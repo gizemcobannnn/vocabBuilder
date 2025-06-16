@@ -86,7 +86,7 @@ export const getWords = createAsyncThunk(
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      return response.data;
+      return response.data.results;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
