@@ -6,8 +6,9 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import ukrainian from '../../src/assets/ukraine.svg';
 import english from '../../src/assets/english.svg';
+import { createPortal } from "react-dom";
 
-export default function Wordsave() {
+export default function Wordsave({closeModal}) {
   const dispatch = useDispatch();
 
   const validationForm = Yup.object().shape({
@@ -31,7 +32,9 @@ export default function Wordsave() {
     }
   };
 
-  return (
+  return createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+
     <div className="bg-[#85AA9F] rounded-3xl p-12">
       <Formik
         initialValues={{ word1: "", word2: "" }}
@@ -41,6 +44,7 @@ export default function Wordsave() {
         {({ isSubmitting, resetForm }) => (
           <Form>
             <div className="flex flex-col gap-4">
+              <button onClick={closeModal}>X</button>
               <div className="mb-2 flex flex-col gap-5">
                 <div className="flex flex-row items-start">
                   <Field
@@ -64,7 +68,7 @@ export default function Wordsave() {
               <div className="mb-2">
                 <div className="flex flex-row items-start">
                   <Field
-                    name="word2"
+                    name="word1"
                     type="text"
                     className="w-65 text-white border border-white/40 rounded-xl p-2"
                     placeholder="Word"
@@ -103,5 +107,6 @@ export default function Wordsave() {
         )}
       </Formik>
     </div>
+    </div>, document.body
   );
 }

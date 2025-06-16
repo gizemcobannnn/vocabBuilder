@@ -3,12 +3,16 @@ import english from "../assets/english.svg";
 import ukrainian from "../assets/ukraine.svg";
 import { FaArrowRight } from "react-icons/fa6";
 import { useState } from "react";
+import Wordsave from "../components/Wordsave";
+import Welldone from "../components/Welldone";
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
+  const [isModalOpen, setIsModalOpen]=useState(false);
   const handleSelect = (e) => {
     setSelectedWordType(e.target.value);
   };
   return (
+<>
     <div>
       <div className="flex flex-row items-center justify-between w-300">
         <div className="flex flex-row rounded-3xl w-150 p-12 items-center gap-3">
@@ -30,9 +34,10 @@ export default function Dictionary() {
             <option value="functionalPhrase">Functional phrase</option>
           </select>
         </div>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-4">
           <p>To study: </p>
-          <p>Train oneself </p>
+          <button onClick={()=>setIsModalOpen(true)} className="font-semibold">Add Word +</button>
+          <p className="font-semibold">Train oneself </p>
         </div>
       </div>
             <div className="flex flex-row items-center justify-between w-300">
@@ -65,7 +70,7 @@ export default function Dictionary() {
                     <td className="border border-gray-300 px-4 py-2">Translation</td>
                     <td className="border border-gray-300 px-4 py-2">Verb</td>
                     <td className="border border-gray-300 px-4 py-2">
-                      <button className="text-slate-600">
+                      <button className="text-slate-600" onClick={()=>setIsModalOpen(true)}>
                         Add to dictionary
                         <FaArrowRight className="inline-block ml-1 text-[12px]" />
                       </button>
@@ -75,5 +80,7 @@ export default function Dictionary() {
               </table>
             </div>
     </div>
+    {isModalOpen && (<Welldone closeModal={()=>setIsModalOpen(false)} />)}
+</>
   );
 }

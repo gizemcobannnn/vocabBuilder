@@ -1,6 +1,9 @@
 import ukrainian from "../assets/ukraine.svg";
 import english from "../assets/english.svg";
+import { useState } from "react";
+import Welldone from "../components/Welldone";
 export default function Training() {
+  const [isModalOpen,setIsModalOpen]=useState(false);
   return (
     <>
       <div className="grid grid-cols-2 gap-4 p-12 bg-[#FCFCFC] rounded-3xl">
@@ -23,9 +26,12 @@ export default function Training() {
         </div>
       </div>
       <div className="flex flex-row items-center gap-10">
-        <button className="colorfulButton ">Save</button>
+        <button className="colorfulButton" onClick={()=>setIsModalOpen(true)}>Save</button>
         <button className="colorfulButton">Cancel</button>
       </div>
+      {isModalOpen && (
+        <Welldone closeModal={()=>setIsModalOpen(false)} />
+      )}
     </>
   );
 }
