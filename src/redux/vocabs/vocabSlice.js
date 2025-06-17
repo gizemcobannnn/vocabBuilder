@@ -3,6 +3,7 @@ import {createAnswer,getTasks,statistics,deleteWord,getOwnWord ,getWords,editWor
 const initialState ={
     name: 'vocabBuilder',
     words: [],
+    recommendedWords:[],
     tasks:[],
     category: "",
     ownWords: [],

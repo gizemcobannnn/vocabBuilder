@@ -2,11 +2,15 @@ import { BsSearch } from "react-icons/bs";
 import english from "../assets/english.svg";
 import ukrainian from "../assets/ukraine.svg";
 import { FaArrowRight } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getOwnWord } from "../redux/vocabs/vocabOps";
 
 export default function Recommend() {
   const [selectedWordType, setSelectedWordType] = useState("Verb");
   const [selectedCategory, setselectedCategory] = useState("Regular");
+  const [recommendedWords,setrecommendedWords] = useState([]);
+  const dispatch = useDispatch();
   const handleWordTypeChange = (e) => {
     setSelectedWordType(e.target.value);
   }
@@ -14,6 +18,14 @@ export default function Recommend() {
   const handleCategoryChange = (e) => {
     setselectedCategory(e.target.value); 
   }
+
+  useEffect(()=>{
+    const fetchRecommendedWords=async()=>{
+      const recommendedWords = await dispatch(getOwnWord()).unwrap();
+      setrecommendedWords(recommendedWords.results);
+    };
+    fetchRecommendedWords();
+  },[])
   return (
     <>
       <div className="flex flex-row items-center justify-between w-300">
@@ -74,17 +86,25 @@ export default function Recommend() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="border border-gray-300 px-4 py-2">Gizem Genç</td>
-              <td className="border border-gray-300 px-4 py-2">Translation</td>
-              <td className="border border-gray-300 px-4 py-2">Verb</td>
+            {recommendedWords.length === 0 && (
+  <tr>
+    <td className="px-4 py-2 text-center" colSpan={4}>No results</td>
+  </tr>
+)}
+            {recommendedWords.length>0  && (recommendedWords.map(word=>(
+            <tr key={word.id}>
+              <td className="border border-gray-300 px-4 py-2">{word.en}</td>
+              <td className="border border-gray-300 px-4 py-2">{word.ua}</td>
+              <td className="border border-gray-300 px-4 py-2">{word.category}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <button className="text-slate-600">
                   Add to dictionary
                   <FaArrowRight className="inline-block ml-1 text-[12px]" />
                 </button>
               </td>
-            </tr>
+            </tr>)
+            ))}
+
           </tbody>
         </table>
       </div>

@@ -93,7 +93,7 @@ export default function Dictionary() {
                   <td className="border border-gray-300 px-4 py-2">
                     progress
                   </td>
-                  <td className="flex justify-center items-center p-2">
+                  <td className="border border-gray-300 flex justify-center items-center p-2">
                   <button onClick={()=>setIsEdit(!isEdit)} >...</button>
                   {isModalOpen && (<Welldone closeModal={()=>setIsModalOpen(false)} />)}
                   </td>
