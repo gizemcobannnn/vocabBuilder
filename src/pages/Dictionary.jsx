@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import Wordsave from "../components/Wordsave";
 import Welldone from "../components/Welldone";
 import { getWords, deleteWord } from "../redux/vocabs/vocabOps";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
@@ -16,7 +17,14 @@ export default function Dictionary() {
   const dispatch = useDispatch();
   const [selectedWord, setSelectedWord] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const token = useSelector(state=>state.auth.token);
+  const navigate =  useNavigate();
+  useEffect(()=>{
+      if(!token){
+          navigate('/recommend', { replace: true });
 
+  }
+  },[])
   const handleSelect = (e) => {
     setSelectedWordType(e.target.value);
   };
@@ -30,8 +38,8 @@ export default function Dictionary() {
   }, [dispatch]);
 
   const handleDelete = async(id) => {
-    await dispatch(deleteWord(id)); // redux store'dan da silinir
-  const updatedWords = await dispatch(getWords()).unwrap(); // tekrar fetch et
+    await dispatch(deleteWord(id)).unwrap(); 
+  const updatedWords = await dispatch(getWords()).unwrap(); 
     setSelectedWord(null);
     setIsEdit(false);
       setWords(updatedWords);

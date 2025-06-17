@@ -79,12 +79,7 @@ export const getWords = createAsyncThunk(
   "words/getWords",
   async (_, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
-
-      const response = await axios.get(`${API_URL}/words/all`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(`${API_URL}/words/all`);
 
       return response.data.results;
     } catch (error) {

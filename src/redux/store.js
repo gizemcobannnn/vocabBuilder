@@ -7,14 +7,19 @@ import authReducer from './auth/authSlice'
 const persistWordsConfig = {
     key:"persistedWords",
     storage,
-    whitelist: ["words","favorites","token"]
+    whitelist: ["words","favorites"]
+}
+const persistAuthConfig = {
+  key:  "persistedAuth",
+  storage,
+  whitelist:["token"]
 }
 
 const persistWordReducer = persistReducer(persistWordsConfig, wordsSlice.reducer);
-
+const persistAuthReducer = persistReducer(persistAuthConfig, authReducer)
 export const store = configureStore({
     reducer: {
-        auth: authReducer,
+        auth: persistAuthReducer,
         words:persistWordReducer
     },
     middleware: (getDefaultMiddleware) =>

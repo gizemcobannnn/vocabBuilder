@@ -5,6 +5,7 @@ const initialState = {
     name:"auth",
     isLoggedIn: false,
     isRegistered: false,
+    isLoggedOut:false,
     user:null,
     error:null,
     isLoading: false,
@@ -35,6 +36,7 @@ const authSlice = createSlice({
     .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading=false;
         state.isRegistered = true;
+        state.isLoggedOut=false;
         state.user = action.payload;
         state.error = null;
 }).addCase(registerUser.rejected, (state, action) => {
@@ -48,6 +50,7 @@ const authSlice = createSlice({
     }) .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isLoggedIn = true;
+        state.isLoggedOut=false;
         state.user = action.payload;
         state.error = null;
     }).addCase(loginUser.rejected, (state, action) => {
@@ -60,6 +63,7 @@ const authSlice = createSlice({
     }).addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.isLoggedIn = false;
+        state.isLoggedOut=true;
         state.user = null;
         state.error = null;
     }).addCase(logoutUser.rejected, (state, action) => {
