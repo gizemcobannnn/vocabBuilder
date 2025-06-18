@@ -1,21 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import craft from "../assets/Craftwork.svg";
 import user from "../assets/gridicons_user.svg";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
-import { logoutUser } from "../redux/auth/authOps";
+import { logoutUser,getUser } from "../redux/auth/authOps";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { setAuthToken } from "../api/axios";
+
 export default function Header() {
   const isLoggedOut=useSelector(state=>state.auth.isLoggedOut);
   const token = localStorage.getItem("token")
+  const [userName,setUser]=useState("")
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(()=>{
+    setAuthToken(token)
+      const fetchUserName = async () => {
+    try {
+      const user = await dispatch(getUser()).unwrap();
+      setUser(user);
+    } catch (e) {
+      console.error("Failed to fetch user", e);
+    }
+  };
     if(isLoggedOut || !token){
       navigate("/login")
     }
-  },[token,navigate,isLoggedOut])
+    else{
+      fetchUserName();
+    }
+  },[token,navigate,isLoggedOut,dispatch])
   const handleLogout =async()=>{
     try{
           await dispatch(logoutUser()).unwrap();
@@ -35,8 +50,8 @@ export default function Header() {
         <NavLink to="/recommend">Recommend</NavLink>
         <NavLink to="/training">Training</NavLink>
       </nav>
-      <div className="flex flex-row gap-4 items-center">
-        <p>namw</p>
+      <div className="flex flex-row gap-2 items-center">
+        <p>{userName.name}</p>
         <div className="w-10 h-10 rounded-full bg-[#85AA9F] flex justify-center items-center">
           <img src={user} alt="user" />
         </div>
