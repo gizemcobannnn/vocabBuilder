@@ -9,6 +9,8 @@ import english from "../../src/assets/english.svg";
 import { createPortal } from "react-dom";
 
 export default function Wordsave({ id,payload,closeModal }) {
+  const category = payload?.category || "";
+  const isIrregular = payload?.isIrregular || false;
   const dispatch = useDispatch();
 
   const validationForm = Yup.object().shape({
@@ -23,7 +25,8 @@ export default function Wordsave({ id,payload,closeModal }) {
   const handleSubmit = async (values, { resetForm }) => {
     const { word1, word2 } = values;
     try {
-      await dispatch(editWord({ en: word1, ua: word2 ,category, isRegular})).unwrap();
+      const updatedData={ua: word1, en: word2 ,category, isIrregular}
+      await dispatch(editWord({id,updatedData})).unwrap();
       resetForm();
       toast.success("Word is added.");
     } catch (error) {

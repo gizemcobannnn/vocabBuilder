@@ -9,12 +9,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAuthToken } from "../api/axios";
 import { toast } from "react-toastify";
+import AddWord from "../components/AddWord";
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
+  const [selectedIsRegular,setSelectedIsRegular]= useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const [words, setWords] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const dispatch = useDispatch();
   const [selectedWord, setSelectedWord] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,7 +35,7 @@ export default function Dictionary() {
       getWords({
         keyword: searchTerm,
         category: selectedWordType,
-        isRegular: true,
+        isIrregular: selectedIsRegular,
         page: page,
         limit: 7,
       })
@@ -46,7 +49,7 @@ useEffect(() => {
         getWords({
           keyword: searchTerm,
           category: selectedWordType,
-          isRegular: true,
+          isIrregular: selectedIsRegular,
           page: currentPage,
           limit: 7,
         })
@@ -68,7 +71,13 @@ useEffect(() => {
 
   const handleDelete = async (id) => {
     await dispatch(deleteWord(id)).unwrap();
-    const updatedWords = await dispatch(getWords()).unwrap();
+    const updatedWords = await dispatch(  getWords({
+    keyword: searchTerm,
+    category: selectedWordType,
+    isIrregular: selectedIsRegular,
+    page: currentPage,
+    limit: 7,
+  })).unwrap();
     setSelectedWord(null);
     setIsEdit(false);
     setWords(updatedWords);
@@ -110,7 +119,7 @@ useEffect(() => {
           </div>
           <div className="flex flex-row gap-4">
             <p>To study: </p>
-            <button
+            <button type="button"
               onClick={() => setIsModalOpen(true)}
               className="font-semibold"
             >
@@ -151,7 +160,7 @@ useEffect(() => {
                   word.en.toLowerCase().includes(searchTerm.toLowerCase())
                 )
                 .map((word) => (
-                  <tr key={word.id}>
+                  <tr key={word._id}>
                     <td className="border border-gray-300 px-4 py-2">
                       {word.en}
                     </td>
@@ -169,6 +178,8 @@ useEffect(() => {
                         onClick={() => {
                           setSelectedWord(word);
                           setIsEdit(true);
+                          setSelectedIsRegular(word.isIrregular);
+                          console.log(selectedWord);
                         }}
                       >
                         ...
@@ -221,7 +232,11 @@ useEffect(() => {
         <button className="pageButtons" onClick={() => handlePage}></button>
       </div>
 
-      {isModalOpen && <Welldone closeModal={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <AddWord
+          closeModal={() => setIsModalOpen(false)}
+        />
+      )}
 
       {selectedWord && isEdit && (
         <div className="w-full flex flex-col p-3 gap-2">
@@ -234,7 +249,7 @@ useEffect(() => {
           </button>
           <button
             type="button"
-            onClick={() => handleDelete(selectedWord.id)}
+            onClick={() => handleDelete(selectedWord._id)}
             className="text-red-600"
           >
             Delete
@@ -244,8 +259,11 @@ useEffect(() => {
 
       {isEditModalOpen && selectedWord && (
         <Wordsave
-          category={selectedWord.category}
-          isIrregular={selectedWord.isRegular}
+          id={selectedWord._id}
+                      payload={{
+            category: selectedWord?.category,
+            isIrregular: selectedWord?.isIrregular,
+          }}
           closeModal={() => {
             setIsEditModalOpen(false);
             setIsEdit(false);
