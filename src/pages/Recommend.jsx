@@ -3,14 +3,18 @@ import english from "../assets/english.svg";
 import ukrainian from "../assets/ukraine.svg";
 import { FaArrowRight } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getOwnWord } from "../redux/vocabs/vocabOps";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { setToken } from "../redux/auth/authSlice";
 export default function Recommend() {
   const [selectedWordType, setSelectedWordType] = useState("Verb");
   const [selectedCategory, setselectedCategory] = useState("Regular");
   const [recommendedWords,setrecommendedWords] = useState([]);
+  const token = useSelector(state=>state.auth.token);
   const dispatch = useDispatch();
+    const navigate = useNavigate();
   const handleWordTypeChange = (e) => {
     setSelectedWordType(e.target.value);
   }
@@ -19,13 +23,28 @@ export default function Recommend() {
     setselectedCategory(e.target.value); 
   }
 
-  useEffect(()=>{
-    const fetchRecommendedWords=async()=>{
-      const recommendedWords = await dispatch(getOwnWord()).unwrap();
-      setrecommendedWords(recommendedWords.results);
+
+  useEffect(() => {
+    setToken(token);
+    const fetchRecommendedWords = async () => {
+      try {
+        const response = await dispatch(getOwnWord()).unwrap();
+        setrecommendedWords(response.results); // Eğer API'nin response'u buysa
+      } catch (e) {
+        if (e.response?.status === 401) {
+          toast.error("You are unauthorized. Please log in.");
+          navigate("/login");
+        } else {
+          toast.error("An error occurred while fetching words.");
+        }
+      }
     };
-    fetchRecommendedWords();
-  },[])
+
+    if (token) {
+      fetchRecommendedWords();
+    }
+  }, [token, dispatch, navigate]);
+
   return (
     <>
       <div className="flex flex-row items-center justify-between w-300">

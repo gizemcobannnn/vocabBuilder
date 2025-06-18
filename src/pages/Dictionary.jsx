@@ -7,7 +7,8 @@ import Welldone from "../components/Welldone";
 import { getWords, deleteWord } from "../redux/vocabs/vocabOps";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import { setAuthToken } from "../api/axios";
+import { toast } from "react-toastify";
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,40 +18,60 @@ export default function Dictionary() {
   const dispatch = useDispatch();
   const [selectedWord, setSelectedWord] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const token = useSelector(state=>state.auth.token);
-  const [currentPage,setCurrentPage]=useState(1);
-  const isLoggedIn = useSelector(state=>state.auth.isLoggedIn)
-  
-  const navigate =  useNavigate();
-  useEffect(()=>{
-      if(!token && !isLoggedIn){
-          navigate('/recommend', { replace: true });
+  const token = useSelector((state) => state.auth.token);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  }
-  },[token, navigate])
+  const navigate = useNavigate();
+
   const handleSelect = (e) => {
     setSelectedWordType(e.target.value);
   };
- const handlePage=async(page)=>{
-  setCurrentPage(page);
-  await dispatch(getWords({keyword:searchTerm,category:selectedWordType,isRegular:true,page:page,limit:7})).unwrap();
-
- }
-  useEffect(() => {
-    const fetchWords = async () => {
-      const words = await dispatch(getWords({keyword:searchTerm,category:selectedWordType,isRegular:true,page:currentPage,limit:7})).unwrap();
+  const handlePage = async (page) => {
+    setCurrentPage(page);
+    await dispatch(
+      getWords({
+        keyword: searchTerm,
+        category: selectedWordType,
+        isRegular: true,
+        page: page,
+        limit: 7,
+      })
+    ).unwrap();
+  };
+useEffect(() => {
+  const fetchWords = async () => {
+    try {
+      setAuthToken(token);
+      const words = await dispatch(
+        getWords({
+          keyword: searchTerm,
+          category: selectedWordType,
+          isRegular: true,
+          page: currentPage,
+          limit: 7,
+        })
+      ).unwrap();
       setWords(words.results);
-    };
-    fetchWords();
-  }, [dispatch,currentPage]);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("You are unauthorized. Please log in.");
+        navigate("/login");
+      } else {
+        toast.error("An error occurred while fetching words.");
+      }
+    }
+  };
 
-  const handleDelete = async(id) => {
-    await dispatch(deleteWord(id)).unwrap(); 
-  const updatedWords = await dispatch(getWords()).unwrap(); 
+  fetchWords();
+}, [dispatch, currentPage, token, navigate, searchTerm, selectedWordType]);
+
+
+  const handleDelete = async (id) => {
+    await dispatch(deleteWord(id)).unwrap();
+    const updatedWords = await dispatch(getWords()).unwrap();
     setSelectedWord(null);
     setIsEdit(false);
-      setWords(updatedWords);
-
+    setWords(updatedWords);
   };
 
   return (
@@ -160,20 +181,44 @@ export default function Dictionary() {
         </div>
       </div>
       <div className=" flex flex-row gap-2 justify-center mt-5">
-        <button className="pageButtons" onClick={()=>handlePage}> </button>
-        <button className="pageButtons" onClick={()=>handlePage}> </button>
-        <button className="pageButtons" onClick={()=>handlePage(1)}>1</button>
-        <button className="pageButtons" onClick={()=>handlePage(2)}>2</button>
-        <button className="pageButtons" onClick={()=>handlePage(3)}>3</button>
-        <button className="pageButtons" onClick={()=>handlePage(4)}>4</button>
-        <button className="pageButtons" onClick={()=>handlePage(5)}>5</button>
-        <button className="pageButtons" onClick={()=>handlePage(6)}>6</button>
-        <button className="pageButtons" onClick={()=>handlePage(7)}>7</button>
-        <button className="pageButtons" onClick={()=>handlePage(8)}>8</button>
-        <button className="pageButtons" onClick={()=>handlePage(9)}>9</button>
-        <button className="pageButtons" onClick={()=>handlePage(10)}>10</button>
-        <button className="pageButtons" onClick={()=>handlePage}></button>
-        <button className="pageButtons" onClick={()=>handlePage}></button>
+        <button className="pageButtons" onClick={() => handlePage}>
+          {" "}
+        </button>
+        <button className="pageButtons" onClick={() => handlePage}>
+          {" "}
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(1)}>
+          1
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(2)}>
+          2
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(3)}>
+          3
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(4)}>
+          4
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(5)}>
+          5
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(6)}>
+          6
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(7)}>
+          7
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(8)}>
+          8
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(9)}>
+          9
+        </button>
+        <button className="pageButtons" onClick={() => handlePage(10)}>
+          10
+        </button>
+        <button className="pageButtons" onClick={() => handlePage}></button>
+        <button className="pageButtons" onClick={() => handlePage}></button>
       </div>
 
       {isModalOpen && <Welldone closeModal={() => setIsModalOpen(false)} />}
