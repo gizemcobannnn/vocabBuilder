@@ -2,8 +2,26 @@ import ukrainian from "../assets/ukraine.svg";
 import english from "../assets/english.svg";
 import { useState } from "react";
 import Welldone from "../components/Welldone";
+import { useEffect } from "react";
+import { getTasks } from "../redux/vocabs/vocabOps";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 export default function Training() {
   const [isModalOpen,setIsModalOpen]=useState(false);
+  const dispatch= useDispatch();
+  const [tasks,setTasks]=useState([])
+  useEffect(()=>{
+    const getTask=async()=>{
+      try{
+        const tasksResponse=await dispatch(getTasks()).unwrap();
+        setTasks(tasksResponse.words);
+      }catch(e){
+        toast.error("tasks did not fetched"+e)
+      }
+    }
+    getTask();
+    
+  })
   return (
     <>
       <div className="grid grid-cols-2 gap-0 p-5 bg-[#FCFCFC] rounded-3xl">
@@ -33,7 +51,7 @@ export default function Training() {
         <button className="colorfulButton">Cancel</button>
       </div>
       {isModalOpen && (
-        <Welldone closeModal={()=>setIsModalOpen(false)} />
+        <Welldone closeModal={()=>setIsModalOpen(false)} tasks={tasks}/>
       )}
     </>
   );
