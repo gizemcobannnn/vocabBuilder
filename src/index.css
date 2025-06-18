@@ -10,9 +10,19 @@
   border: none;
   border-radius: 30px;
   padding: 14px 80px;
-
 }
 
+.pageButtons{
+  border: 1px solid rgb(190, 190, 190);
+  border-radius: 30%;
+  padding: 2px;
+  height: 40px;
+  width: 40px;
+}
+
+.pageButtons:focus{
+  background-color: #85AA9F;
+}
 .whiteButton{
   color: #85AA9F;
   background: #ffffff;
@@ -46,13 +56,6 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
 
 
 @media (prefers-color-scheme: light) {

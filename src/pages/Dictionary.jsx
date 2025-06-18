@@ -18,24 +18,31 @@ export default function Dictionary() {
   const [selectedWord, setSelectedWord] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const token = useSelector(state=>state.auth.token);
+  const [currentPage,setCurrentPage]=useState(1);
+  const isLoggedIn = useSelector(state=>state.auth.isLoggedIn)
+  
   const navigate =  useNavigate();
   useEffect(()=>{
-      if(!token){
+      if(!token && !isLoggedIn){
           navigate('/recommend', { replace: true });
 
   }
-  },[])
+  },[token, navigate])
   const handleSelect = (e) => {
     setSelectedWordType(e.target.value);
   };
+ const handlePage=async(page)=>{
+  setCurrentPage(page);
+  await dispatch(getWords({keyword:searchTerm,category:selectedWordType,isRegular:true,page:page,limit:7})).unwrap();
 
+ }
   useEffect(() => {
     const fetchWords = async () => {
-      const words = await dispatch(getWords()).unwrap();
-      setWords(words);
+      const words = await dispatch(getWords({keyword:searchTerm,category:selectedWordType,isRegular:true,page:currentPage,limit:7})).unwrap();
+      setWords(words.results);
     };
     fetchWords();
-  }, [dispatch]);
+  }, [dispatch,currentPage]);
 
   const handleDelete = async(id) => {
     await dispatch(deleteWord(id)).unwrap(); 
@@ -92,29 +99,29 @@ export default function Dictionary() {
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-between w-300">
+        <div className="flex flex-row items-center justify-between">
           <table className="min-w-full border border-gray-300">
             <thead>
               <tr className="bg-[#85AA9F]/10">
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="border border-gray-300 px-4 py-2 text-left w-80">
                   <div className="flex flex-row justify-between items-center gap-2">
                     <p>Word</p>
                     <img src={english} alt="english" />
                   </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="border border-gray-300 px-4 py-2 text-left w-80">
                   <div className="flex flex-row justify-between items-center gap-2">
                     <p>Translation</p>
                     <img src={ukrainian} alt="ukrainian" />
                   </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="border border-gray-300 px-4 py-2 text-left w-60">
                   Category
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="border border-gray-300 px-4 py-2 text-left w-60">
                   Progress
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left"></th>
+                <th className="border border-gray-300 px-4 py-2 text-left w-20"></th>
               </tr>
             </thead>
             <tbody className="text-left">
@@ -152,10 +159,24 @@ export default function Dictionary() {
           </table>
         </div>
       </div>
+      <div className=" flex flex-row gap-2 justify-center mt-5">
+        <button className="pageButtons" onClick={()=>handlePage}> </button>
+        <button className="pageButtons" onClick={()=>handlePage}> </button>
+        <button className="pageButtons" onClick={()=>handlePage(1)}>1</button>
+        <button className="pageButtons" onClick={()=>handlePage(2)}>2</button>
+        <button className="pageButtons" onClick={()=>handlePage(3)}>3</button>
+        <button className="pageButtons" onClick={()=>handlePage(4)}>4</button>
+        <button className="pageButtons" onClick={()=>handlePage(5)}>5</button>
+        <button className="pageButtons" onClick={()=>handlePage(6)}>6</button>
+        <button className="pageButtons" onClick={()=>handlePage(7)}>7</button>
+        <button className="pageButtons" onClick={()=>handlePage(8)}>8</button>
+        <button className="pageButtons" onClick={()=>handlePage(9)}>9</button>
+        <button className="pageButtons" onClick={()=>handlePage(10)}>10</button>
+        <button className="pageButtons" onClick={()=>handlePage}></button>
+        <button className="pageButtons" onClick={()=>handlePage}></button>
+      </div>
 
-      {isModalOpen && (
-        <Welldone closeModal={() => setIsModalOpen(false)} />
-      )}
+      {isModalOpen && <Welldone closeModal={() => setIsModalOpen(false)} />}
 
       {selectedWord && isEdit && (
         <div className="w-full flex flex-col p-3 gap-2">
@@ -173,7 +194,6 @@ export default function Dictionary() {
           >
             Delete
           </button>
-
         </div>
       )}
 
