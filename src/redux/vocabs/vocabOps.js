@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import api from "../../api/axios"
 const API_URL = "https://vocab-builder-backend.p.goit.global/api";
 
@@ -24,13 +23,16 @@ export const fetchCategories = createAsyncThunk(
 
 export const createWord = createAsyncThunk(
   "words/createWord",
-  async (data, thunkAPI) => {
+  async ({data,selectedWordType, selectedIsRegular}, thunkAPI) => {
     try {
-      const token = useSelector(state=>state.auth.token);
 
-      const response = await axios.post(`${API_URL}/words/create`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+
+      const response = await api.post(`${API_URL}/words/create`,{
+  ua:data.word1,
+  en:data.word2,
+  isIrregular:selectedIsRegular === "irregular",
+  category:selectedWordType,
+});
 
       return response.data;
     } catch (error) {

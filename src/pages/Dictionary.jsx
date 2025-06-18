@@ -66,7 +66,7 @@ useEffect(() => {
   };
 
   fetchWords();
-}, [dispatch, currentPage, token, navigate, searchTerm, selectedWordType]);
+}, [dispatch, currentPage, token, navigate, searchTerm, selectedWordType,selectedIsRegular ]);
 
 
   const handleDelete = async (id) => {

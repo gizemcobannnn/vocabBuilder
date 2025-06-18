@@ -2,159 +2,172 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import ukrainian from "../../src/assets/ukraine.svg";
 import english from "../../src/assets/english.svg";
-import * as Yup from "yup"
+import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch } from "react-redux";
+import { createWord } from "../redux/vocabs/vocabOps";
+import { toast } from "react-toastify";
 
+export default function AddWord({ closeModal }) {
+  const [selectedWordType, setSelectedWordType] = useState("verb");
+  const [selectedIsRegular, setSelectedIsRegular] = useState(true);
+  const dispatch = useDispatch();
 
-export default function AddWord({closeModal}) {
-  const [selectedWordType, setselectedWordType] = useState("");
-  const [selectedCategory, setselectedCategory] = useState("");
+  const validationForm = Yup.object().shape({
+    word1: Yup.string()
+      .min(2, "Word must be 2 characters or more")
+      .required("Required"),
+    word2: Yup.string()
+      .min(2, "Word must be 2 characters or more")
+      .required("Required"),
+  });
+
   const handleSelect = (e) => {
-    setselectedWordType(e.target.value);
+    setSelectedWordType(e.target.value);
   };
-  const handleCategory = (e) => {
-    setselectedCategory(e.target.value);
-  };
-const handleSubmit=()=>{
 
-}
-    const validationForm = Yup.object().shape({
-      word1: Yup.string()
-        .min(2, "Word must be 2 characters or more")
-        .required("Required"),
-      word2: Yup.string()
-        .min(2, "Word must be 2 characters or more")
-        .required("Required"),
-    });
+  const handleRegularity = (e) => {
+    setSelectedIsRegular(e.target.value === "regular");
+  };
+
+  const handleSubmit = async (values, { resetForm, setSubmitting }) => {
+    try {
+      await dispatch(
+        createWord({ data: values, selectedWordType, selectedIsRegular })
+      ).unwrap();
+      toast.success("Word saved successfully!");
+      resetForm();
+      closeModal();
+    } catch (e) {
+      toast.error("Word did not save: " + e.message);
+    }
+    setSubmitting(false);
+  };
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="flex flex-col items-start bg-[#85AA9F] rounded-3xl w-150 relative">
-      <button className="text-white text-2xl absolute top-4 right-6" onClick={closeModal}>X</button>
-      <div className="flex flex-col gap-5 pl-12 pt-12 pr-12 items-start">
-        <p className="font-bold text-white text-3xl">Add word</p>
-        <p className="text-white text-[20px] text-justify">
+      <div className="flex flex-col items-start bg-[#85AA9F] rounded-3xl w-150 relative p-12">
+        <button
+          className="text-white text-2xl absolute top-4 right-6"
+          onClick={closeModal}
+        >
+          X
+        </button>
+
+        <h2 className="font-bold text-white text-3xl mb-4">Add Word</h2>
+        <p className="text-white text-lg mb-6">
           Adding a new word to the dictionary is an important step in enriching
           the language base and expanding the vocabulary.
         </p>
-      </div>
-      <div className="flex flex-col gap-5 pl-12 pt-12 pr-12 items-start">
+
         <select
           name="wordtype"
-          id="wordtype"
-          className="text-white bg-[#85AA9F] border border-white/40 rounded-xl p-2 w-40"
+          className="text-white bg-[#85AA9F] border border-white/40 rounded-xl p-2 w-40 mb-4"
           onChange={handleSelect}
-          valıue={selectedWordType}
+          value={selectedWordType}
         >
-          <option value="Verb">Verb</option>
-          <option value="Participle">Participle</option>
-          <option value="Noun">Noun</option>
-          <option value="Participle">Participle</option>
-          <option value="Pronoun">Pronoun</option>
-          <option value="Numerals">Numerals</option>
-          <option value="Adverb">Adverb</option>
+          <option value="verb">Verb</option>
+          <option value="participle">Participle</option>
+          <option value="noun">Noun</option>
+          <option value="pronoun">Pronoun</option>
+          <option value="numerals">Numerals</option>
+          <option value="adverb">Adverb</option>
         </select>
-        <div className="flex flex-row gap-4 items-center text-white">
-          <label htmlFor="noun">
+
+        <div className="flex gap-4 mb-6 text-white">
+          <label>
             <input
               type="radio"
               name="wordCategory"
-              value="irregular"
-              id="irregular"
-              checked={selectedCategory === "irregular"}
-              onChange={handleCategory}
+              value="regular"
+              checked={selectedIsRegular === true}
+              onChange={handleRegularity}
             />{" "}
             Regular
           </label>
-          <label htmlFor="adjective">
+          <label>
             <input
               type="radio"
               name="wordCategory"
               value="irregular"
-              id="irregular"
-              checked={selectedCategory === "irregular"}
-              onChange={handleCategory}
+              checked={selectedIsRegular === false}
+              onChange={handleRegularity}
             />{" "}
             Irregular
           </label>
         </div>
-      </div>
-      <div className="flex flex-col gap-5 pl-12 pt-12 pr-12 items-start mb-12">
-                <Formik
-                  initialValues={{ word1: "", word2: "" }}
-                  validationSchema={validationForm}
-                  onSubmit={handleSubmit}
+
+        <Formik
+          initialValues={{ word1: "", word2: "" }}
+          validationSchema={validationForm}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, resetForm }) => (
+            <Form className="flex flex-col gap-5 w-full">
+              <div>
+                <div className="flex items-center mb-2 w-100">
+                  <Field
+                    name="word1"
+                    type="text"
+                    className="flex-1 text-white border border-white/40 rounded-xl p-2 "
+                    placeholder="Word"
+                  />
+                  <div className="flex items-center gap-2 ml-2">
+                    <img src={ukrainian} alt="ukrainian" className="h-7 w-7" />
+                    <span className="text-white">Ukrainian</span>
+                  </div>
+                </div>
+                <ErrorMessage
+                  name="word1"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center mb-2 w-100">
+                  <Field
+                    name="word2"
+                    type="text"
+                    className="flex-1 text-white border border-white/40 rounded-xl p-2"
+                    placeholder="Word"
+                  />
+                  <div className="flex items-center gap-2 ml-2">
+                    <img src={english} alt="english" className="h-7 w-7" />
+                    <span className="text-white">English</span>
+                  </div>
+                </div>
+                <ErrorMessage
+                  name="word2"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="border border-white/40 rounded-2xl flex-1 p-2 bg-white font-semibold"
                 >
-                  {({ isSubmitting, resetForm }) => (
-                    <Form>
-                      <div className="flex flex-col gap-4 ">
-                        <div className="mb-2 flex flex-col gap-5">
-                          <div className="flex flex-row items-start">
-                            <Field
-                              name="word1"
-                              type="text"
-                              className="w-65 text-white border border-white/40 rounded-xl p-2"
-                              placeholder="Word"
-                            />
-                            <div className="rounded-xl ml-2 mt-2 flex flex-row gap-2">
-                              <img
-                                src={ukrainian}
-                                alt="ukrainian"
-                                className="h-7 w-7"
-                              />
-                              <p className="text-white">Ukrainian</p>
-                            </div>
-                          </div>
-                          <ErrorMessage
-                            name="word1"
-                            component="div"
-                            className="text-red-600 text-sm"
-                          />
-                        </div>
-        
-                        <div className="mb-2">
-                          <div className="flex flex-row items-start">
-                            <Field
-                              name="word2"
-                              type="text"
-                              className="w-65 text-white border border-white/40 rounded-xl p-2"
-                              placeholder="Word"
-                            />
-                            <div className="rounded-xl ml-2 mt-2 flex flex-row gap-2">
-                              <img src={english} alt="english" className="h-7 w-7" />
-                              <p className="text-white">English</p>
-                            </div>
-                          </div>
-                          <ErrorMessage
-                            name="word2"
-                            component="div"
-                            className="text-red-600 text-sm"
-                          />
-                        </div>
-        
-                        <div className="flex flex-row justify-around gap-4">
-                          <button
-                            type="submit"
-                            className="border border-white/40 rounded-2xl w-full p-2 bg-white font-semibold"
-                            disabled={isSubmitting}
-                          >
-                            {isSubmitting ? "Saving..." : "Save"}
-                          </button>
-        
-                          <button
-                            type="button"
-                            onClick={() => resetForm()}
-                            className="border border-white/40 rounded-2xl w-full p-2 text-white font-semibold"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
+                  {isSubmitting ? "Saving..." : "Save"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetForm();
+                    closeModal();
+                  }}
+                  className="border border-white/40 rounded-2xl flex-1 p-2 text-white font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
-    </div>
-</div>,document.body
+    </div>,
+    document.body
   );
 }
