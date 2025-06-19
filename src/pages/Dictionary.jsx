@@ -260,7 +260,9 @@ useEffect(() => {
       {isEditModalOpen && selectedWord && (
         <Wordsave
           id={selectedWord._id}
-                      payload={{
+          payload={{
+            ua:selectedWord?.ua,
+            en:selectedWord?.en,
             category: selectedWord?.category,
             isIrregular: selectedWord?.isIrregular,
           }}

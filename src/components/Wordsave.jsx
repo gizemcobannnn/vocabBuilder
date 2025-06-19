@@ -11,7 +11,10 @@ import { createPortal } from "react-dom";
 export default function Wordsave({ id,payload,closeModal }) {
   const category = payload?.category || "";
   const isIrregular = payload?.isIrregular || false;
+  const ua = payload?.ua || "";
+  const en = payload?.en || "";
   const dispatch = useDispatch();
+  console.log(`${id} and payload: ${payload.ua}`)
 
   const validationForm = Yup.object().shape({
     word1: Yup.string()
@@ -23,15 +26,14 @@ export default function Wordsave({ id,payload,closeModal }) {
   });
 
   const handleSubmit = async (values, { resetForm }) => {
-    const { word1, word2 } = values;
+    const { ua, en } = values;
     try {
-      const updatedData={ua: word1, en: word2 ,category, isIrregular}
+      const updatedData={ua: ua, en: en ,category, isIrregular}
       await dispatch(editWord({id,updatedData})).unwrap();
       resetForm();
       toast.success("Word is added.");
     } catch (error) {
-      console.error("Word creation failed", error);
-      toast.error("Failed to add word.");
+      toast.error("Failed to add word."+error);
     }
   };
 
@@ -46,7 +48,7 @@ export default function Wordsave({ id,payload,closeModal }) {
         </button>
 
         <Formik
-          initialValues={{ word1: "", word2: "" }}
+          initialValues={{ word1: ua, word2: en }}
           validationSchema={validationForm}
           onSubmit={handleSubmit}
         >
@@ -59,7 +61,7 @@ export default function Wordsave({ id,payload,closeModal }) {
                       name="word1"
                       type="text"
                       className="w-65 text-white border border-white/40 rounded-xl p-2"
-                      placeholder="Word"
+              
                     />
                     <div className="rounded-xl ml-2 mt-2 flex flex-row gap-2">
                       <img
@@ -83,7 +85,6 @@ export default function Wordsave({ id,payload,closeModal }) {
                       name="word2"
                       type="text"
                       className="w-65 text-white border border-white/40 rounded-xl p-2"
-                      placeholder="Word"
                     />
                     <div className="rounded-xl ml-2 mt-2 flex flex-row gap-2">
                       <img src={english} alt="english" className="h-7 w-7" />
@@ -108,7 +109,7 @@ export default function Wordsave({ id,payload,closeModal }) {
 
                   <button
                     type="button"
-                    onClick={() => resetForm()}
+                    onClick={() => {resetForm();closeModal()}}
                     className="border border-white/40 rounded-2xl w-full p-2 text-white font-semibold"
                   >
                     Cancel
