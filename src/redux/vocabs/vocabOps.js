@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import api from "../../api/axios"
+import api from "../../api/axios";
 const API_URL = "https://vocab-builder-backend.p.goit.global/api";
 
 export const fetchCategories = createAsyncThunk(
@@ -23,23 +23,29 @@ export const fetchCategories = createAsyncThunk(
 
 export const createWord = createAsyncThunk(
   "words/createWord",
-  async ({data,selectedWordType, selectedIsRegular}, thunkAPI) => {
+  async ({ data, selectedWordType, selectedIsRegular }, thunkAPI) => {
     try {
+      let payload = {
+        ua: data.word1,
+        en: data.word2,
+        category: selectedWordType,
+      };
 
+      // Eğer kategori 'noun' değilse, isIrregular ekle
+      if (selectedWordType !== "noun") {
+        payload.isIrregular = selectedIsRegular === "irregular";
+      }
 
-      const response = await api.post(`${API_URL}/words/create`,{
-  ua:data.word1,
-  en:data.word2,
-  isIrregular:selectedIsRegular === "irregular",
-  category:selectedWordType,
-});
-
+      const response = await api.post(`/words/create`, payload);
       return response.data;
+
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      const message = error.response?.data?.message || "Bir hata oluştu.";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
+
 
 export const createForeignWord = createAsyncThunk(
   "words/createForeignWord",
@@ -63,16 +69,26 @@ export const editWord = createAsyncThunk(
   "words/editWord",
   async ({ id, updatedData }, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
-
-      const response = await axios.patch(`${API_URL}/words/edit/${id}`, updatedData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.patch(
+        `${API_URL}/words/edit/${id}`,
+        updatedData
+      );
 
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      const message = error.response?.data?.message;
+      const status = error.response?.status;
+
+      if (
+        status === 403 &&
+        message === "You don't have right to edit this word"
+      ) {
+        return thunkAPI.rejectWithValue(message);
+      }
+
+      return thunkAPI.rejectWithValue(
+        message || "An error occurred while editing the word."
+      );
     }
   }
 );
@@ -81,8 +97,10 @@ export const getWords = createAsyncThunk(
   "words/getWords",
   async (payload, thunkAPI) => {
     try {
-      const {keyword,category,isRegular,page,limit}=payload;
-      const response = await api.get(`/words/all`, {params: { keyword, category, isRegular, page, limit }},);
+      const { keyword, category, isRegular, page, limit } = payload;
+      const response = await api.get(`/words/all`, {
+        params: { keyword, category, isRegular, page, limit },
+      });
 
       return response.data;
     } catch (error) {
@@ -170,9 +188,13 @@ export const createAnswer = createAsyncThunk(
       const state = thunkAPI.getState();
       const token = state.auth.token;
 
-      const response = await axios.post(`${API_URL}/words/answers`, answerData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        `${API_URL}/words/answers`,
+        answerData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       return response.data;
     } catch (error) {

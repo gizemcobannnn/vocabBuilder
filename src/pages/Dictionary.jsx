@@ -10,13 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { setAuthToken } from "../api/axios";
 import { toast } from "react-toastify";
 import AddWord from "../components/AddWord";
+
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
-  const [selectedIsRegular,setSelectedIsRegular]= useState(true);
+  const [selectedIsRegular, setSelectedIsRegular] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
   const [words, setWords] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [isEdit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
   const [selectedWord, setSelectedWord] = useState(null);
@@ -41,43 +44,52 @@ export default function Dictionary() {
       })
     ).unwrap();
   };
-useEffect(() => {
-  const fetchWords = async () => {
-    try {
-      setAuthToken(token);
-      const words = await dispatch(
-        getWords({
-          keyword: searchTerm,
-          category: selectedWordType,
-          isIrregular: selectedIsRegular,
-          page: currentPage,
-          limit: 7,
-        })
-      ).unwrap();
-      setWords(words.results);
-    } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("You are unauthorized. Please log in.");
-        navigate("/login");
-      } else {
-        toast.error("An error occurred while fetching words.");
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        setAuthToken(token);
+        const words = await dispatch(
+          getWords({
+            keyword: searchTerm,
+            category: selectedWordType,
+            isIrregular: selectedIsRegular,
+            page: currentPage,
+            limit: 7,
+          })
+        ).unwrap();
+        setWords(words.results);
+      } catch (error) {
+        if (error.response?.status === 401) {
+          toast.error("You are unauthorized. Please log in.");
+          navigate("/login");
+        } else {
+          toast.error("An error occurred while fetching words.");
+        }
       }
-    }
-  };
+    };
 
-  fetchWords();
-}, [dispatch, currentPage, token, navigate, searchTerm, selectedWordType,selectedIsRegular ]);
-
+    fetchWords();
+  }, [
+    dispatch,
+    currentPage,
+    token,
+    navigate,
+    searchTerm,
+    selectedWordType,
+    selectedIsRegular,
+  ]);
 
   const handleDelete = async (id) => {
     await dispatch(deleteWord(id)).unwrap();
-    const updatedWords = await dispatch(  getWords({
-    keyword: searchTerm,
-    category: selectedWordType,
-    isIrregular: selectedIsRegular,
-    page: currentPage,
-    limit: 7,
-  })).unwrap();
+    const updatedWords = await dispatch(
+      getWords({
+        keyword: searchTerm,
+        category: selectedWordType,
+        isIrregular: selectedIsRegular,
+        page: currentPage,
+        limit: 7,
+      })
+    ).unwrap();
     setSelectedWord(null);
     setIsEdit(false);
     setWords(updatedWords);
@@ -119,7 +131,8 @@ useEffect(() => {
           </div>
           <div className="flex flex-row gap-4">
             <p>To study: </p>
-            <button type="button"
+            <button
+              type="button"
               onClick={() => setIsModalOpen(true)}
               className="font-semibold"
             >
@@ -129,7 +142,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-between ">
           <table className="min-w-full border border-gray-300">
             <thead>
               <tr className="bg-[#85AA9F]/10">
@@ -173,17 +186,41 @@ useEffect(() => {
                     <td className="border border-gray-300 px-4 py-2">
                       progress
                     </td>
-                    <td className="border border-gray-300 p-2 text-center">
+                    <td className="border border-gray-300 p-2 text-center relative">
                       <button
                         onClick={() => {
                           setSelectedWord(word);
                           setIsEdit(true);
                           setSelectedIsRegular(word.isIrregular);
-                          console.log(selectedWord);
+                          setOpenDropdownId(
+                            openDropdownId === word._id ? null : word._id
+                          );
                         }}
                       >
                         ...
                       </button>
+
+                      {openDropdownId === word._id && (
+                        <div className="absolute top-8 right-4 w-32 bg-white shadow-lg rounded p-2 flex flex-col gap-2 z-10">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedWord(word);
+                              setIsEditModalOpen(true);
+                            }}
+                            className="text-blue-600 text-left"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(word._id)}
+                            className="text-red-600 text-left"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -232,37 +269,14 @@ useEffect(() => {
         <button className="pageButtons" onClick={() => handlePage}></button>
       </div>
 
-      {isModalOpen && (
-        <AddWord
-          closeModal={() => setIsModalOpen(false)}
-        />
-      )}
-
-      {selectedWord && isEdit && (
-        <div className="w-full flex flex-col p-3 gap-2">
-          <button
-            type="button"
-            onClick={() => setIsEditModalOpen(true)}
-            className="text-blue-600"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={() => handleDelete(selectedWord._id)}
-            className="text-red-600"
-          >
-            Delete
-          </button>
-        </div>
-      )}
+      {isModalOpen && <AddWord closeModal={() => setIsModalOpen(false)} />}
 
       {isEditModalOpen && selectedWord && (
         <Wordsave
           id={selectedWord._id}
           payload={{
-            ua:selectedWord?.ua,
-            en:selectedWord?.en,
+            ua: selectedWord?.ua,
+            en: selectedWord?.en,
             category: selectedWord?.category,
             isIrregular: selectedWord?.isIrregular,
           }}
