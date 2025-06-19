@@ -33,8 +33,6 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -56,22 +54,26 @@ h1 {
   line-height: 1.1;
 }
 
-
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
-  }
+
   button {
     background-color: #f9f9f9;
   }
 }
 
-
+.inputword:focus,.inputword:hover{
+  border: none;
+   outline: none;
+  border: none;
+  box-shadow: none;
+}
+.inputword{
+  border:none;
+}
 .errorMessages{
   color:rgb(140, 21, 21);
 }

@@ -13,7 +13,9 @@ export default function Login() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state=>state.auth.isLoggedIn || false)
   const error = useSelector(state=>state.auth.error)
-
+   const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+  const passwordPattern = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/;
+  
   useEffect(() => {
     if (isLoggedIn) {
       navigate('/recommend', { replace: true });
@@ -41,10 +43,16 @@ export default function Login() {
   const handleSubmit = async (values, action) => {
     try {
       const { email, password } = values;
+      if(!emailPattern.test(email)){
+        alert("Please enter correct email format")
+      }
+      if(!passwordPattern.test(password)){
+        alert("Please enter correct password format")
+      }
       console.log("Form submitted with values:", name, email, password);
       await dispatch(loginUser({ email, password }));
       action.resetForm();
-      setTimeout(() => navigate("/recommend", { replace: true }), 0);
+      setTimeout(() => navigate("/dictionary", { replace: true }), 0);
       toast.success("Login is successful");
       
     } catch (e) {

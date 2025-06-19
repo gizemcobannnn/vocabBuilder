@@ -36,9 +36,9 @@ export default function Training() {
     <>
       <div className="grid grid-cols-2 gap-0 p-5 bg-[#FCFCFC] rounded-3xl">
         <div className="flex flex-col items-start justify-center gap-0 bg-[#FCFCFC]">
-          <div className="flex flex-row justify-between w-[400px] h-[200px] border  border-white border-r-[#DBDBDB] p-5">
-            <input className="" placeholder="UK" value={ua} onChange={(e)=>setua(e.target.value)}></input>
-            <div className="flex flex-row items-start justify-around gap-2 p-4">
+          <div className="flex flex-row justify-between items-start w-[400px] h-[200px] border  border-white border-r-[#DBDBDB] p-6">
+            <input className="inputword" placeholder="UK" value={ua} onChange={(e)=>setua(e.target.value)}></input>
+            <div className="flex flex-row items-start justify-around gap-2">
               <img src={ukrainian} alt="ukrainian" />
               <p>Ukrainian</p>
             </div>
@@ -48,9 +48,9 @@ export default function Training() {
            <button className="flex text-[#121417]/50">Next</button>
           
         </div>
-          <div className="flex flex-row justify-between w-[400px] h-[200px] border border-white border-l-[#DBDBDB] p-5">
-          <input className="" placeholder="EN" value={en} onChange={(e)=>seten(e.target.value)}></input>
-            <div className="flex flex-row items-start justify-around gap-2 p-4">
+          <div className="flex flex-row justify-between items-start w-[400px] h-[200px] border border-white border-l-[#DBDBDB] p-6">
+          <input className="inputword" placeholder="EN" value={en} onChange={(e)=>seten(e.target.value)}></input>
+            <div className="flex flex-row items-start justify-around gap-2">
               <img src={english} alt="english" />
               <p>English</p>
             </div>

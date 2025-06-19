@@ -37,7 +37,7 @@ export default function Register() {
       ).unwrap();
       console.log(user);
       action.resetForm();
-      setTimeout(() => navigate("/recommend", { replace: true }), 0);
+      setTimeout(() => navigate("/dictionary", { replace: true }), 0);
       toast.success("Registration is successful");
     } catch (e) {
       toast.error("Registration is failed: ", e);
