@@ -185,15 +185,9 @@ export const createAnswer = createAsyncThunk(
   "words/createAnswer",
   async (answerData, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
-
-      const response = await axios.post(
-        `${API_URL}/words/answers`,
-        answerData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await api.post(
+        `/words/answers`,
+        [answerData],
       );
 
       return response.data;

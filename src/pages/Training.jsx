@@ -3,13 +3,23 @@ import english from "../assets/english.svg";
 import { useState } from "react";
 import Welldone from "../components/Welldone";
 import { useEffect } from "react";
-import { getTasks } from "../redux/vocabs/vocabOps";
+import { getTasks,createAnswer } from "../redux/vocabs/vocabOps";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import generateObjectId from "../utils/generateObjectId"
 export default function Training() {
   const [isModalOpen,setIsModalOpen]=useState(false);
   const dispatch= useDispatch();
+  const [ua,setua]=useState("");
+  const [en,seten]=useState("")
   const [tasks,setTasks]=useState([])
+  const id= generateObjectId();
+    const handleSave=async()=>{
+    setIsModalOpen(true);
+    const answerData={_id:id.toString(),en,ua,task:"en"}
+     await dispatch(createAnswer(answerData)).unwrap();
+    setTasks(prev=>[...prev,answerData]);
+  }
   useEffect(()=>{
     const getTask=async()=>{
       try{
@@ -27,7 +37,7 @@ export default function Training() {
       <div className="grid grid-cols-2 gap-0 p-5 bg-[#FCFCFC] rounded-3xl">
         <div className="flex flex-col items-start justify-center gap-0 bg-[#FCFCFC]">
           <div className="flex flex-row justify-between w-[400px] h-[200px] border  border-white border-r-[#DBDBDB] p-5">
-            <input className="" placeholder="UK"></input>
+            <input className="" placeholder="UK" value={ua} onChange={(e)=>setua(e.target.value)}></input>
             <div className="flex flex-row items-start justify-around gap-2 p-4">
               <img src={ukrainian} alt="ukrainian" />
               <p>Ukrainian</p>
@@ -39,7 +49,7 @@ export default function Training() {
           
         </div>
           <div className="flex flex-row justify-between w-[400px] h-[200px] border border-white border-l-[#DBDBDB] p-5">
-          <input className="" placeholder="EN"></input>
+          <input className="" placeholder="EN" value={en} onChange={(e)=>seten(e.target.value)}></input>
             <div className="flex flex-row items-start justify-around gap-2 p-4">
               <img src={english} alt="english" />
               <p>English</p>
@@ -47,7 +57,7 @@ export default function Training() {
         </div>
       </div>
       <div className="flex flex-row items-center gap-10 mt-10">
-        <button className="colorfulButton" onClick={()=>setIsModalOpen(true)}>Save</button>
+        <button className="colorfulButton" onClick={handleSave} disabled={ua === "" || en === ""}>Save</button>
         <button className="colorfulButton">Cancel</button>
       </div>
       {isModalOpen && (
