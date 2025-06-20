@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+
 import api from "../../api/axios";
 const API_URL = "https://vocab-builder-backend.p.goit.global/api";
 
@@ -7,13 +7,8 @@ export const fetchCategories = createAsyncThunk(
   "words/fetchCategories",
   async (_, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
 
-      const response = await axios.get(`${API_URL}/words/categories`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      const response = await api.get(`/words/categories`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -51,12 +46,7 @@ export const createForeignWord = createAsyncThunk(
   "words/createForeignWord",
   async ({ id, data }, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
-
-      const response = await axios.post(`${API_URL}/words/create/${id}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.post(`/words/create/${id}`, data);
 
       return response.data;
     } catch (error) {
@@ -113,12 +103,8 @@ export const getOwnWord = createAsyncThunk(
   "words/getOwnWord",
   async (_, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
 
-      const response = await axios.get(`${API_URL}/words/own`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/words/own`);
 
       return response.data;
     } catch (error) {
@@ -131,13 +117,7 @@ export const deleteWord = createAsyncThunk(
   "words/deleteWord",
   async (id, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
-
-      const response = await axios.delete(`${API_URL}/words/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      const response = await api.delete(`/words/delete/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -149,12 +129,7 @@ export const statistics = createAsyncThunk(
   "words/statistics",
   async (_, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
-
-      const response = await axios.get(`${API_URL}/words/statistics`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/words/statistics`);
 
       return response.data;
     } catch (error) {
@@ -167,12 +142,8 @@ export const getTasks = createAsyncThunk(
   "words/getTasks",
   async (_, thunkAPI) => {
     try {
-      const state = thunkAPI.getState();
-      const token = state.auth.token;
 
-      const response = await axios.get(`${API_URL}/words/tasks`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/words/tasks`);
 
       return response.data;
     } catch (error) {

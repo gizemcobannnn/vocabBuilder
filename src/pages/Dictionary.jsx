@@ -79,8 +79,10 @@ export default function Dictionary() {
     selectedIsRegular,
   ]);
 
-  const handleDelete = async (id) => {
+const handleDelete = async (id) => {
+  try {
     await dispatch(deleteWord(id)).unwrap();
+
     const updatedWords = await dispatch(
       getWords({
         keyword: searchTerm,
@@ -90,10 +92,15 @@ export default function Dictionary() {
         limit: 7,
       })
     ).unwrap();
+
     setSelectedWord(null);
     setIsEdit(false);
-    setWords(updatedWords);
-  };
+setWords(updatedWords.results)
+  } catch (error) {
+    console.error("Error:", error.message || error);
+    alert(error.message || "Deletion is failed.");
+  }
+};
 
   return (
     <>

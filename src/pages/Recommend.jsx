@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { setToken } from "../redux/auth/authSlice";
 export default function Recommend() {
   const [selectedWordType, setSelectedWordType] = useState("Verb");
-  const [selectedCategory, setselectedCategory] = useState("Regular");
+  const [selectedCategory, setselectedCategory] = useState("regular");
   const [recommendedWords,setrecommendedWords] = useState([]);
   const token = useSelector(state=>state.auth.token);
   const dispatch = useDispatch();
@@ -64,12 +64,12 @@ export default function Recommend() {
           </select>
           <div className="flex flex-row gap-4 items-center justify-center ">
             <label htmlFor="regular">
-              <input id="regular" type="radio" 
+              <input id="regular" type="radio" value="regular" 
               onChange={handleCategoryChange}
               checked={selectedCategory === "regular"} /> Regular
             </label>
             <label htmlFor="irregular">
-              <input id="irregular" type="radio" 
+              <input id="irregular" type="radio" value="irregular" 
               onChange={handleCategoryChange}
               checked={selectedCategory==="irregular"}/> Irregular
             </label>
