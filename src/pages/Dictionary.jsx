@@ -153,7 +153,8 @@ setWords(updatedWords.results)
             >
               Add Word +
             </button>
-            <p className="font-semibold">Train oneself </p>
+            <button type="button" className="font-semibold"
+              onClick={()=>{navigate("/training",{replace:true})}}>Train oneself </button>
           </div>
         </div>
 
