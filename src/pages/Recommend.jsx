@@ -43,6 +43,9 @@ export default function Recommend() {
     if (token) {
       fetchRecommendedWords();
     }
+    else{
+      toast.info("Please login before view the page")
+    }
   }, [token, dispatch, navigate]);
 
   return (

@@ -4,11 +4,12 @@ import { useState } from "react";
 import Welldone from "../components/Welldone";
 import { useEffect } from "react";
 import { getTasks, createAnswer } from "../redux/vocabs/vocabOps";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import generateObjectId from "../utils/generateObjectId";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import LearnedWords from "../components/LearnedWords";
+import { useNavigate } from "react-router-dom";
 
 export default function Training() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,13 +19,19 @@ export default function Training() {
   const [tasks, setTasks] = useState([]);
   const id = generateObjectId();
   const [isLoading, setIsLoading] = useState(true);
-
+  const token= useSelector(state=>state.auth.token);
+  const navigate = useNavigate();
   const handleSave = async () => {
     setIsModalOpen(true);
     const answerData = { _id: id.toString(), en, ua, task: "en" };
     await dispatch(createAnswer(answerData)).unwrap();
     setTasks((prev) => [...prev, answerData]);
   };
+  useEffect(()=>{
+    if(!token){
+      navigate("/login",{replace:true})
+    }
+  },[token])
   useEffect(() => {
     const getTask = async () => {
       try {
@@ -37,8 +44,13 @@ export default function Training() {
         setIsLoading(false)
       }
     };
-    getTask();
+    if(token){
+      getTask();
+    }else{
+      toast.info("Please login before view the page")
+    }
   },[]);
+
   return (
     <>
  {isLoading ? (

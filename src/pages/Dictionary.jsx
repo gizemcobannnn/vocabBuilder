@@ -67,8 +67,11 @@ export default function Dictionary() {
         }
       }
     };
-
-    fetchWords();
+    if (token) {
+      fetchWords();
+    } else {
+      toast.info("Please login before view the page");
+    }
   }, [
     dispatch,
     currentPage,
