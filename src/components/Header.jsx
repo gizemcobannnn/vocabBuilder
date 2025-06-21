@@ -19,7 +19,7 @@ export default function Header() {
     const fetchUserName = async () => {
       try {
         const user = await dispatch(getUser()).unwrap();
-        setUser(user);
+        setUser(user || "");
       } catch (e) {
         console.error("Failed to fetch user", e);
       }

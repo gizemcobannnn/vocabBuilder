@@ -13,10 +13,10 @@ export default function LearnedWords() {
           you are interested in adding to your study.
         </p>
         <div className="flex flex-row gap-5">
-          <button className="colorfulButton rounded-3xl p-3 w-40">
+          <button className="colorfulButton w-40 h-12">
             Add Word
           </button>
-          <button className="whiteButton rounded-3xl p-3 w-40">Cancel</button>
+          <button className="whiteButton rounded-3xl p-3 w-40 h-12">Cancel</button>
         </div>
       </div>
       <div>

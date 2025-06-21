@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import generateObjectId from "../utils/generateObjectId";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import LearnedWords from "../components/LearnedWords";
 
 export default function Training() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +17,8 @@ export default function Training() {
   const [en, seten] = useState("");
   const [tasks, setTasks] = useState([]);
   const id = generateObjectId();
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleSave = async () => {
     setIsModalOpen(true);
     const answerData = { _id: id.toString(), en, ua, task: "en" };
@@ -26,16 +29,24 @@ export default function Training() {
     const getTask = async () => {
       try {
         const tasksResponse = await dispatch(getTasks()).unwrap();
-        setTasks(tasksResponse.words);
+        setTasks(tasksResponse.tasks.words || []);
+
       } catch (e) {
         toast.error("tasks did not fetched" + e);
+      }finally{
+        setIsLoading(false)
       }
     };
     getTask();
-  });
+  },[]);
   return (
     <>
-      <div className="flex flex-col">
+ {isLoading ? (
+        <div>Loading...</div>
+      ) : tasks?.length === 0 ? (
+        <LearnedWords />
+      ) :(
+        <div className="flex flex-col">
         <div className="flex flex-row self-end h-5 w-10 m-20">
           <CountdownCircleTimer
             isPlaying
@@ -94,10 +105,11 @@ export default function Training() {
           </button>
           <button className="colorfulButton">Cancel</button>
         </div>
-      </div>
+      </div>)}
       {isModalOpen && (
         <Welldone closeModal={() => setIsModalOpen(false)} tasks={tasks} />
       )}
     </>
   );
+
 }
