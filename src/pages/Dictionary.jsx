@@ -10,6 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { setAuthToken } from "../api/axios";
 import { toast } from "react-toastify";
 import AddWord from "../components/AddWord";
+import { MdNavigateBefore } from "react-icons/md";
+import { MdNavigateNext } from "react-icons/md";
+import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+
 
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
@@ -26,7 +31,7 @@ export default function Dictionary() {
   const [searchTerm, setSearchTerm] = useState("");
   const token = useSelector((state) => state.auth.token);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [totalPage,setTotalPage]=useState(0);
   const navigate = useNavigate();
 
   const handleSelect = (e) => {
@@ -34,7 +39,7 @@ export default function Dictionary() {
   };
   const handlePage = async (page) => {
     setCurrentPage(page);
-    await dispatch(
+    const response =await dispatch(
       getWords({
         keyword: searchTerm,
         category: selectedWordType,
@@ -43,8 +48,10 @@ export default function Dictionary() {
         limit: 7,
       })
     ).unwrap();
+    setTotalPage(response.totalPages)
   };
   useEffect(() => {
+
     const fetchWords = async () => {
       try {
         setAuthToken(token);
@@ -58,6 +65,7 @@ export default function Dictionary() {
           })
         ).unwrap();
         setWords(words.results);
+        setCurrentPage(currentPage)
       } catch (error) {
         if (error.response?.status === 401) {
           toast.error("You are unauthorized. Please log in.");
@@ -244,46 +252,80 @@ setWords(updatedWords.results)
           </table>
         </div>
       </div>
-      <div className=" flex flex-row gap-2 justify-center mt-5">
-        <button className="pageButtons" onClick={() => handlePage}>
-          {" "}
-        </button>
-        <button className="pageButtons" onClick={() => handlePage}>
-          {" "}
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(1)}>
-          1
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(2)}>
-          2
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(3)}>
-          3
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(4)}>
-          4
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(5)}>
-          5
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(6)}>
-          6
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(7)}>
-          7
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(8)}>
-          8
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(9)}>
-          9
-        </button>
-        <button className="pageButtons" onClick={() => handlePage(10)}>
-          10
-        </button>
-        <button className="pageButtons" onClick={() => handlePage}></button>
-        <button className="pageButtons" onClick={() => handlePage}></button>
-      </div>
+<div className="flex flex-row gap-2 justify-center mt-5">
+
+  <button
+    className="pageButtons flex flex-row justify-center items-center"
+    onClick={() => handlePage(1)}
+  >
+    <MdKeyboardDoubleArrowLeft />
+  </button>
+
+
+  <button
+    className="pageButtons flex flex-row justify-center items-center"
+    onClick={() => handlePage(Math.max(1, currentPage - 1))}
+  >
+    <MdNavigateBefore />
+  </button>
+
+ 
+  {[1, 2, 3].map((page) => (
+    <button
+      key={page}
+      className={`pageButtons ${
+        currentPage === page ? "bg-[#85AA9F] text-white" : ""
+      }`}
+      onClick={() => handlePage(page)}
+    >
+      {page}
+    </button>
+  ))}
+
+
+  <button className="pageButtons" disabled>
+    ...
+  </button>
+
+  {/* Son 2 Sayfa */}
+  {totalPage > 3 && (
+    <>
+      <button
+        className={`pageButtons ${
+          currentPage === totalPage - 1 ? "bg-[#85AA9F] text-white" : ""
+        }`}
+        onClick={() => handlePage(totalPage - 1)}
+      >
+        {totalPage - 1}
+      </button>
+      <button
+        className={`pageButtons ${
+          currentPage === totalPage ? "bg-[#85AA9F] text-white" : ""
+        }`}
+        onClick={() => handlePage(totalPage)}
+      >
+        {totalPage}
+      </button>
+    </>
+  )}
+
+  {/* Next Page */}
+  <button
+    className="pageButtons flex flex-row justify-center items-center"
+    onClick={() => handlePage(Math.min(totalPage, currentPage + 1))}
+  >
+    <MdNavigateNext />
+  </button>
+
+  {/* Last Page */}
+  <button
+    className="pageButtons flex flex-row justify-center items-center"
+    onClick={() => handlePage(totalPage)}
+  >
+    <MdKeyboardDoubleArrowRight />
+  </button>
+</div>
+
 
       {isModalOpen && <AddWord closeModal={() => setIsModalOpen(false)} />}
 
