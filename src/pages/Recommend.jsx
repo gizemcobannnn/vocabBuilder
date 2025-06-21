@@ -11,18 +11,17 @@ import { setToken } from "../redux/auth/authSlice";
 export default function Recommend() {
   const [selectedWordType, setSelectedWordType] = useState("Verb");
   const [selectedCategory, setselectedCategory] = useState("regular");
-  const [recommendedWords,setrecommendedWords] = useState([]);
-  const token = useSelector(state=>state.auth.token);
+  const [recommendedWords, setrecommendedWords] = useState([]);
+  const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleWordTypeChange = (e) => {
     setSelectedWordType(e.target.value);
-  }
+  };
 
   const handleCategoryChange = (e) => {
-    setselectedCategory(e.target.value); 
-  }
-
+    setselectedCategory(e.target.value);
+  };
 
   useEffect(() => {
     setToken(token);
@@ -43,11 +42,14 @@ export default function Recommend() {
     if (token) {
       fetchRecommendedWords();
     }
-    else{
-      toast.info("Please login before view the page")
-    }
   }, [token, dispatch, navigate]);
 
+  useEffect(() => {
+    if (!token) {
+      toast.info("Please login before view the page");
+      navigate("/login", { replace: true });
+    }
+  }, [token]);
   return (
     <>
       <div className="flex flex-row items-center justify-between w-300">
@@ -61,20 +63,30 @@ export default function Recommend() {
             id="selectword"
             className="border border-[#121417]/10 w-30 rounded-lg p-1"
             onChange={handleWordTypeChange}
-            value={ selectedWordType}
+            value={selectedWordType}
           >
             <option value="Verb">Verb</option>
           </select>
           <div className="flex flex-row gap-4 items-center justify-center ">
             <label htmlFor="regular">
-              <input id="regular" type="radio" value="regular" 
-              onChange={handleCategoryChange}
-              checked={selectedCategory === "regular"} /> Regular
+              <input
+                id="regular"
+                type="radio"
+                value="regular"
+                onChange={handleCategoryChange}
+                checked={selectedCategory === "regular"}
+              />{" "}
+              Regular
             </label>
             <label htmlFor="irregular">
-              <input id="irregular" type="radio" value="irregular" 
-              onChange={handleCategoryChange}
-              checked={selectedCategory==="irregular"}/> Irregular
+              <input
+                id="irregular"
+                type="radio"
+                value="irregular"
+                onChange={handleCategoryChange}
+                checked={selectedCategory === "irregular"}
+              />{" "}
+              Irregular
             </label>
           </div>
         </div>
@@ -109,24 +121,32 @@ export default function Recommend() {
           </thead>
           <tbody>
             {recommendedWords.length === 0 && (
-  <tr>
-    <td className="px-4 py-2 text-center" colSpan={4}>No results</td>
-  </tr>
-)}
-            {recommendedWords.length>0  && (recommendedWords.map(word=>(
-            <tr key={word.id}>
-              <td className="border border-gray-300 px-4 py-2">{word.en}</td>
-              <td className="border border-gray-300 px-4 py-2">{word.ua}</td>
-              <td className="border border-gray-300 px-4 py-2">{word.category}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <button className="text-slate-600">
-                  Add to dictionary
-                  <FaArrowRight className="inline-block ml-1 text-[12px]" />
-                </button>
-              </td>
-            </tr>)
-            ))}
-
+              <tr>
+                <td className="px-4 py-2 text-center" colSpan={4}>
+                  No results
+                </td>
+              </tr>
+            )}
+            {recommendedWords.length > 0 &&
+              recommendedWords.map((word) => (
+                <tr key={word.id}>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {word.en}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {word.ua}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {word.category}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button className="text-slate-600">
+                      Add to dictionary
+                      <FaArrowRight className="inline-block ml-1 text-[12px]" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

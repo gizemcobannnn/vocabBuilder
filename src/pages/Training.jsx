@@ -27,11 +27,13 @@ export default function Training() {
     await dispatch(createAnswer(answerData)).unwrap();
     setTasks((prev) => [...prev, answerData]);
   };
-  useEffect(()=>{
-    if(!token){
-      navigate("/login",{replace:true})
-    }
-  },[token])
+  useEffect(() => {
+  if (!token) {
+    toast.info("Please login before view the page");
+    navigate("/login", { replace: true });
+  }
+}, [token]);
+
   useEffect(() => {
     const getTask = async () => {
       try {
@@ -46,8 +48,6 @@ export default function Training() {
     };
     if(token){
       getTask();
-    }else{
-      toast.info("Please login before view the page")
     }
   },[]);
 

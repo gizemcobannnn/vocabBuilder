@@ -67,11 +67,9 @@ export default function Dictionary() {
         }
       }
     };
-    if (token) {
-      fetchWords();
-    } else {
-      toast.info("Please login before view the page");
-    }
+   if(token){
+    fetchWords();
+   }
   }, [
     dispatch,
     currentPage,
@@ -81,6 +79,13 @@ export default function Dictionary() {
     selectedWordType,
     selectedIsRegular,
   ]);
+
+  useEffect(() => {
+  if (!token) {
+    toast.info("Please login before view the page");
+    navigate("/login", { replace: true });
+  }
+}, [token]);
 
 const handleDelete = async (id) => {
   try {
