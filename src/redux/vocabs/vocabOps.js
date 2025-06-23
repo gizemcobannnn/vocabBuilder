@@ -7,7 +7,6 @@ export const fetchCategories = createAsyncThunk(
   "words/fetchCategories",
   async (_, thunkAPI) => {
     try {
-
       const response = await api.get(`/words/categories`);
       return response.data;
     } catch (error) {
@@ -87,9 +86,9 @@ export const getWords = createAsyncThunk(
   "words/getWords",
   async (payload, thunkAPI) => {
     try {
-      const { keyword, category, isRegular, page, limit } = payload;
+      const { keyword, category, isIrregular, page, limit } = payload;
       const response = await api.get(`/words/all`, {
-        params: { keyword, category, isRegular, page, limit },
+        params: { keyword, category, isIrregular, page, limit },
       });
 
       return response.data;

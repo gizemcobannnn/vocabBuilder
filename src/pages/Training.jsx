@@ -38,7 +38,7 @@ export default function Training() {
     const getTask = async () => {
       try {
         const tasksResponse = await dispatch(getTasks()).unwrap();
-        setTasks(tasksResponse.tasks.words || []);
+        setTasks(tasksResponse.tasks || []);
 
       } catch (e) {
         toast.error("tasks did not fetched" + e);
@@ -109,13 +109,13 @@ export default function Training() {
         </div>
         <div className="flex flex-row items-center gap-10 mt-10">
           <button
-            className="colorfulButton"
+            className="colorfulButton w-40 h-10"
             onClick={handleSave}
             disabled={ua === "" || en === ""}
           >
             Save
           </button>
-          <button className="colorfulButton">Cancel</button>
+          <button className="colorfulButton w-40 h-10">Cancel</button>
         </div>
       </div>)}
       {isModalOpen && (

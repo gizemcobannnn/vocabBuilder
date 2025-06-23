@@ -57,13 +57,15 @@ export default function Dictionary() {
         setAuthToken(token);
         const words = await dispatch(
           getWords({
-            keyword: searchTerm,
-            category: selectedWordType,
-            isIrregular: selectedIsRegular,
+            keyword: searchTerm || "",
+            category: selectedWordType || "noun",
+            isIrregular: selectedIsRegular || true,
             page: currentPage,
             limit: 7,
           })
         ).unwrap();
+        console.log("Fetched words:", words);
+
         setWords(words.results);
         setCurrentPage(currentPage)
       } catch (error) {
@@ -93,7 +95,8 @@ export default function Dictionary() {
     toast.info("Please login before view the page");
     navigate("/login", { replace: true });
   }
-}, [token]);
+  
+}, []);
 
 const handleDelete = async (id) => {
   try {
