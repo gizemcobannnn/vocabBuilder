@@ -1,7 +1,7 @@
 import user from "../assets/gridicons_user.svg";
 import { NavLink } from "react-router-dom";
 import mainimg from "../assets/illustration.svg";
-export default function SideMenu() {
+export default function SideMenu({onClose}) {
   return (
     <div>
       <div className="fixed top-0 right-0 z-50  h-screen w-64 bg-[#85AA9F] p-5">
@@ -10,7 +10,7 @@ export default function SideMenu() {
           <div className="w-10  h-10 rounded-full bg-white flex justify-center items-center">
             <img src={user} alt="user" className="w-10 h-10" />
           </div>
-          <button className="text-white  absolute top-2 right-2">X</button>
+          <button className="text-white  absolute top-2 right-2" onClick={onClose}>X</button>
         </div>
 
         <nav className="flex flex-col mt-20 gap-4 items-start">

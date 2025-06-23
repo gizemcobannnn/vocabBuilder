@@ -7,6 +7,8 @@ import { logoutUser, getUser } from "../redux/auth/authOps";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { setAuthToken } from "../api/axios";
+import SideMenu from './SideMenu'
+
 
 export default function Header() {
   const isLoggedOut = useSelector((state) => state.auth.isLoggedOut);
@@ -14,6 +16,7 @@ export default function Header() {
   const [userName, setUser] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen]=useState(false);
   useEffect(() => {
     setAuthToken(token);
     const fetchUserName = async () => {
@@ -50,10 +53,13 @@ export default function Header() {
         <NavLink to="/training">Training</NavLink>
       </nav>
       <div className="flex flex-row gap-2 items-center">
-        <p>{userName.name}</p>
-        <div className="w-10 h-10 rounded-full bg-[#85AA9F] flex justify-center items-center">
-          <img src={user} alt="user" />
+        <div className="hidden md:flex md:flex-row md:gap-2 md:items-center">
+          <p>{userName.name}</p>
+          <div className="w-10 h-10 rounded-full bg-[#85AA9F] flex justify-center items-center">
+            <img src={user} alt="user" />
+          </div>
         </div>
+
         <div className="flex flex-row gap-2 items-center  px-4 py-2 font-semibold">
           {token && (
             <div className="flex flex-row gap-1 items-center  px-4 py-2 font-semibold">
@@ -62,6 +68,22 @@ export default function Header() {
             </div>
           )}
         </div>
+        <button
+          className="flex md:hidden"
+          onClick={() => setIsMenuOpen(true)}
+        >...</button>
+        {
+          <div
+            className={`fixed top-0 z-50 right-0 w-70 h-screen p-5 trasform ${
+              isMenuOpen ? "translate-x-0" : "translate-x-full"
+            } md:hidden`}
+            transition-transform
+            duration-300
+            ease-in-out
+          >
+            <SideMenu onClose={()=>setIsMenuOpen(false)}/>
+          </div>
+        }
       </div>
     </div>
   );
