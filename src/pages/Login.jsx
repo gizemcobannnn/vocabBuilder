@@ -11,16 +11,17 @@ import { toast } from "react-toastify";
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const isLoggedIn = useSelector(state=>state.auth.isLoggedIn || false)
   const error = useSelector(state=>state.auth.error)
    const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   const passwordPattern = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/;
   
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/recommend', { replace: true });
+    if (isLoggedIn && isSubmitted) {
+      navigate('/dictionary', { replace: true });
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, isSubmitted, navigate]);
 
   useEffect(() => {
     if (error) {
@@ -51,8 +52,8 @@ export default function Login() {
       }
       console.log("Form submitted with values:", name, email, password);
       await dispatch(loginUser({ email, password }));
+      setIsSubmitted(true);
       action.resetForm();
-      setTimeout(() => navigate("/dictionary", { replace: true }), 0);
       toast.success("Login is successful");
       
     } catch (e) {
@@ -116,17 +117,18 @@ export default function Login() {
                 >
                   {isSubmitting ? "Logging" : "Login"}
                 </button>
-                <button
-                  type="button"
-                  className="border-none underline text-[#85AA9F] w-full h-13 rounded-2xl"
-                  onClick={() => navigate("/recommend", { replace: true })}
-                >
-                  Register
-                </button>
+             
               </div>
             </Form>
           )}
         </Formik>
+           <button
+                  type="button"
+                  className="border-none underline text-[#85AA9F] w-full h-13 rounded-2xl"
+                  onClick={() =>{ navigate("/register", { replace: true })} }
+                >
+                  Register
+                </button>
       </div>
       <div className="flex rounded-2xl w-full  md:min-w-[300px] md:max-w-[400px] lg:min-w-[400px] lg:max-w-[600px] bg-gray-100 h-[300px] overflow-hidden">
         <img
