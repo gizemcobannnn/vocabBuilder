@@ -15,14 +15,14 @@ import { MdNavigateNext } from "react-icons/md";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 
-
 export default function Dictionary() {
   const [selectedWordType, setSelectedWordType] = useState("verb");
   const [selectedIsRegular, setSelectedIsRegular] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
-
+ 
+  const totalTask = useSelector(state=>state.vocabBuilder.totalTasks);
   const [words, setWords] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [isEdit, setIsEdit] = useState(false);
@@ -189,7 +189,7 @@ setWords(updatedWords.results)
                   Category
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left w-60">
-                  Progress
+                  {totalTask}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left w-20"></th>
               </tr>

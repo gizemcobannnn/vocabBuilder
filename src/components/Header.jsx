@@ -68,20 +68,18 @@ export default function Header() {
             </div>
           )}
         </div>
-        <button
-          className="flex md:hidden"
-          onClick={() => setIsMenuOpen(true)}
-        >...</button>
+        <button className="flex md:hidden" onClick={() => setIsMenuOpen(true)}>
+          ...
+        </button>
         {
           <div
             className={`fixed top-0 z-50 right-0 w-70 h-screen p-5 trasform ${
               isMenuOpen ? "translate-x-0" : "translate-x-full"
-            } md:hidden`}
-            transition-transform
+            } transition-transform
             duration-300
-            ease-in-out
+            ease-in-out md:hidden`}
           >
-            <SideMenu onClose={()=>setIsMenuOpen(false)}/>
+            <SideMenu onClose={() => setIsMenuOpen(false)} />
           </div>
         }
       </div>

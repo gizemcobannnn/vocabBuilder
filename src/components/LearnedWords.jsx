@@ -1,9 +1,11 @@
 import { useState } from "react";
 import noWord from "../assets/blood-report.svg";
 import AddWord from "./AddWord";
+import { useNavigate } from "react-router-dom";
 
-export default function LearnedWords() {
+export default function LearnedWords({totalTask}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <div className="flex flex-row justify-between items-center  rounded-3xl p-12 gap-8">
@@ -19,7 +21,8 @@ export default function LearnedWords() {
           <div className="flex flex-row gap-5">
             <button
               className="colorfulButton w-40 h-12"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {navigate("/dictionary", {state:{ totalTask: totalTask } }); 
+                setTimeout(()=>setIsModalOpen(true),2000)}}
             >
               Add Word
             </button>

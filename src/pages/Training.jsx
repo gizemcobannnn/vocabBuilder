@@ -10,6 +10,7 @@ import generateObjectId from "../utils/generateObjectId";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import LearnedWords from "../components/LearnedWords";
 import { useNavigate } from "react-router-dom";
+import Dictionary from "./Dictionary";
 
 export default function Training() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function Training() {
   const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [taskNum, setTaskNum] = useState(0);
+  const [totalTask,setTotalTask]=useState(0);
 
   useEffect(() => {
     if (!token) {
@@ -35,6 +37,9 @@ export default function Training() {
       try {
         const tasksResponse = await dispatch(getTasks()).unwrap();
         setTasks(tasksResponse.tasks || []);
+        setUa(tasksResponse.tasks[0].ua || "")
+        setUa(tasksResponse.tasks[0].en || "")
+        setTotalTask(tasksResponse.tasks.length);
       } catch (e) {
         toast.error("Tasks could not be fetched: " + e);
       } finally {
@@ -69,8 +74,9 @@ export default function Training() {
   const handleCountdownComplete = () => {
     if (taskNum < tasks.length - 1) {
       setTaskNum((prev) => prev + 1);
-      setUa("");
-      setEn("");
+      setUa(tasks[taskNum].ua);
+      setEn(tasks[taskNum].en);
+      console.log(ua,en)
       return { shouldRepeat: true, delay: 1 };
     } else {
       setIsModalOpen(true);
@@ -79,7 +85,7 @@ export default function Training() {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (tasks.length === 0) return <LearnedWords />;
+  if (tasks.length === 0) return <LearnedWords totalTask={totalTask} />;
 
   const currentTask = tasks[taskNum];
 
@@ -114,7 +120,7 @@ export default function Training() {
                 placeholder="UK"
                 value={ua}
                 onChange={(e) => setUa(e.target.value)}
-              />
+              /> 
               <div className="flex flex-row items-start justify-around gap-2">
                 <img src={ukrainian} alt="ukrainian" />
                 <p>Ukrainian</p>

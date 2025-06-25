@@ -5,6 +5,7 @@ const initialState ={
     words: [],
     recommendedWords:[],
     tasks:[],
+    totalTasks:1,
     category: "",
     ownWords: [],
     foreignWords: [],
@@ -47,6 +48,7 @@ export const wordsSlice = createSlice({
       })
       .addCase(getTasks.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.totalTasks = action.tasks.length;
         state.tasks = action.payload;
       })
       .addCase(getTasks.rejected, (state, action) => {
