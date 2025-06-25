@@ -49,9 +49,13 @@ export default function Training() {
   const handleSave = async () => {
     if (ua === "" || en === "") return;
 
-    const answerData = { _id: id.toString(), en, ua, task: "en" };
-    await dispatch(createAnswer(answerData)).unwrap();
-
+    try {
+      const answerData = { _id: id.toString(), en, ua, task: "en" };
+      await dispatch(createAnswer(answerData)).unwrap();
+      toast.success("Word is saved");
+    } catch (e) {
+      toast.error("Word is not saved");
+    }
     setUa("");
     setEn("");
 
@@ -82,6 +86,7 @@ export default function Training() {
   return (
     <>
       <div className="flex flex-col">
+        {/* Timer */}
         <div className="flex flex-row self-end h-5 w-10 m-20">
           <CountdownCircleTimer
             isPlaying
@@ -99,7 +104,9 @@ export default function Training() {
           </CountdownCircleTimer>
         </div>
 
+        {/* Task Area */}
         <div className="grid grid-cols-2 gap-0 p-5 bg-[#FCFCFC] rounded-3xl">
+          {/* Ukrainian input */}
           <div className="flex flex-col items-start justify-center gap-0 bg-[#FCFCFC]">
             <div className="flex flex-row justify-between items-start w-[400px] h-[200px] border border-white border-r-[#DBDBDB] p-6">
               <input
@@ -113,6 +120,7 @@ export default function Training() {
                 <p>Ukrainian</p>
               </div>
             </div>
+            {/* Next button */}
             <button
               className="flex text-[#121417]/50 mt-4"
               onClick={handleSave}
@@ -122,6 +130,7 @@ export default function Training() {
             </button>
           </div>
 
+          {/* English input */}
           <div className="flex flex-row justify-between items-start w-[400px] h-[200px] border border-white border-l-[#DBDBDB] p-6">
             <input
               className="inputword"
@@ -136,6 +145,7 @@ export default function Training() {
           </div>
         </div>
 
+        {/* Save - Cancel buttons */}
         <div className="flex flex-row items-center gap-10 mt-10">
           <button
             className="colorfulButton w-40 h-10"
@@ -148,6 +158,7 @@ export default function Training() {
         </div>
       </div>
 
+      {/* Modal */}
       {isModalOpen && (
         <Welldone closeModal={() => setIsModalOpen(false)} tasks={tasks} />
       )}
