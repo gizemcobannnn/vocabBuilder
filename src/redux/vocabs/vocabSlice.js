@@ -48,8 +48,8 @@ export const wordsSlice = createSlice({
       })
       .addCase(getTasks.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.totalTasks = action.tasks.length;
-        state.tasks = action.payload;
+        state.totalTasks = action.payload.tasks.length;
+        state.tasks = action.payload.tasks;
       })
       .addCase(getTasks.rejected, (state, action) => {
         state.status = 'failed';

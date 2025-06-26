@@ -38,7 +38,7 @@ export default function Training() {
         const tasksResponse = await dispatch(getTasks()).unwrap();
         setTasks(tasksResponse.tasks || []);
         setUa(tasksResponse.tasks[0].ua || "")
-        setUa(tasksResponse.tasks[0].en || "")
+        setEn(tasksResponse.tasks[0].en || "")
         setTotalTask(tasksResponse.tasks.length);
       } catch (e) {
         toast.error("Tasks could not be fetched: " + e);
