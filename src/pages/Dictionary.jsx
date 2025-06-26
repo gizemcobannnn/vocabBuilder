@@ -21,8 +21,7 @@ export default function Dictionary() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
- 
-  const totalTask = useSelector(state=>state.vocabBuilder.totalTasks);
+
   const [words, setWords] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [isEdit, setIsEdit] = useState(false);
@@ -31,15 +30,16 @@ export default function Dictionary() {
   const [searchTerm, setSearchTerm] = useState("");
   const token = useSelector((state) => state.auth.token);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage,setTotalPage]=useState(0);
+  const [totalPage, setTotalPage] = useState(0);
   const navigate = useNavigate();
+  const [totalTaskCount, setTotalTaskCount] = useState(0);
 
   const handleSelect = (e) => {
     setSelectedWordType(e.target.value);
   };
   const handlePage = async (page) => {
     setCurrentPage(page);
-    const response =await dispatch(
+    const response = await dispatch(
       getWords({
         keyword: searchTerm,
         category: selectedWordType,
@@ -48,10 +48,9 @@ export default function Dictionary() {
         limit: 7,
       })
     ).unwrap();
-    setTotalPage(response.totalPages)
+    setTotalPage(response.totalPages);
   };
   useEffect(() => {
-
     const fetchWords = async () => {
       try {
         setAuthToken(token);
@@ -67,7 +66,7 @@ export default function Dictionary() {
         console.log("Fetched words:", words);
 
         setWords(words.results);
-        setCurrentPage(currentPage)
+        setCurrentPage(currentPage);
       } catch (error) {
         if (error.response?.status === 401) {
           toast.error("You are unauthorized. Please log in.");
@@ -77,9 +76,9 @@ export default function Dictionary() {
         }
       }
     };
-   if(token){
-    fetchWords();
-   }
+    if (token) {
+      fetchWords();
+    }
   }, [
     dispatch,
     currentPage,
@@ -91,35 +90,39 @@ export default function Dictionary() {
   ]);
 
   useEffect(() => {
-  if (!token) {
-    toast.info("Please login before view the page");
-    navigate("/login", { replace: true });
-  }
-  
-}, []);
+    if (!token) {
+      toast.info("Please login before view the page");
+      navigate("/login", { replace: true });
+    } else {
+      const storedTaskCount = JSON.parse(localStorage.getItem("totalTaskNum"));
+      if (storedTaskCount) {
+        setTotalTaskCount(storedTaskCount);
+      }
+    }
+  }, []);
 
-const handleDelete = async (id) => {
-  try {
-    await dispatch(deleteWord(id)).unwrap();
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteWord(id)).unwrap();
 
-    const updatedWords = await dispatch(
-      getWords({
-        keyword: searchTerm,
-        category: selectedWordType,
-        isIrregular: selectedIsRegular,
-        page: currentPage,
-        limit: 7,
-      })
-    ).unwrap();
+      const updatedWords = await dispatch(
+        getWords({
+          keyword: searchTerm,
+          category: selectedWordType,
+          isIrregular: selectedIsRegular,
+          page: currentPage,
+          limit: 7,
+        })
+      ).unwrap();
 
-    setSelectedWord(null);
-    setIsEdit(false);
-setWords(updatedWords.results)
-  } catch (error) {
-    console.error("Error:", error.message || error);
-    alert(error.message || "Deletion is failed.");
-  }
-};
+      setSelectedWord(null);
+      setIsEdit(false);
+      setWords(updatedWords.results);
+    } catch (error) {
+      console.error("Error:", error.message || error);
+      alert(error.message || "Deletion is failed.");
+    }
+  };
 
   return (
     <>
@@ -164,8 +167,15 @@ setWords(updatedWords.results)
             >
               Add Word +
             </button>
-            <button type="button" className="font-semibold"
-              onClick={()=>{navigate("/training",{replace:true})}}>Train oneself </button>
+            <button
+              type="button"
+              className="font-semibold"
+              onClick={() => {
+                navigate("/training", { replace: true });
+              }}
+            >
+              Train oneself{" "}
+            </button>
           </div>
         </div>
 
@@ -188,8 +198,8 @@ setWords(updatedWords.results)
                 <th className="border border-gray-300 px-4 py-2 text-left w-60">
                   Category
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left w-60">
-                  {totalTask}
+                <th className="border border-gray-300 px-4 py-2 text-left w-60 text-slate-700">
+                  {totalTaskCount}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left w-20"></th>
               </tr>
@@ -211,7 +221,7 @@ setWords(updatedWords.results)
                       {word.category}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
-                      progress
+                      {totalTaskCount}
                     </td>
                     <td className="border border-gray-300 p-2 text-center relative">
                       <button
@@ -255,80 +265,75 @@ setWords(updatedWords.results)
           </table>
         </div>
       </div>
-<div className="flex flex-row gap-2 justify-center mt-5">
+      <div className="flex flex-row gap-2 justify-center mt-5">
+        <button
+          className="pageButtons flex flex-row justify-center items-center"
+          onClick={() => handlePage(1)}
+        >
+          <MdKeyboardDoubleArrowLeft />
+        </button>
 
-  <button
-    className="pageButtons flex flex-row justify-center items-center"
-    onClick={() => handlePage(1)}
-  >
-    <MdKeyboardDoubleArrowLeft />
-  </button>
+        <button
+          className="pageButtons flex flex-row justify-center items-center"
+          onClick={() => handlePage(Math.max(1, currentPage - 1))}
+        >
+          <MdNavigateBefore />
+        </button>
 
+        {[1, 2, 3].map((page) => (
+          <button
+            key={page}
+            className={`pageButtons ${
+              currentPage === page ? "bg-[#85AA9F] text-white" : ""
+            }`}
+            onClick={() => handlePage(page)}
+          >
+            {page}
+          </button>
+        ))}
 
-  <button
-    className="pageButtons flex flex-row justify-center items-center"
-    onClick={() => handlePage(Math.max(1, currentPage - 1))}
-  >
-    <MdNavigateBefore />
-  </button>
+        <button className="pageButtons" disabled>
+          ...
+        </button>
 
- 
-  {[1, 2, 3].map((page) => (
-    <button
-      key={page}
-      className={`pageButtons ${
-        currentPage === page ? "bg-[#85AA9F] text-white" : ""
-      }`}
-      onClick={() => handlePage(page)}
-    >
-      {page}
-    </button>
-  ))}
+        {/* Son 2 Sayfa */}
+        {totalPage > 3 && (
+          <>
+            <button
+              className={`pageButtons ${
+                currentPage === totalPage - 1 ? "bg-[#85AA9F] text-white" : ""
+              }`}
+              onClick={() => handlePage(totalPage - 1)}
+            >
+              {totalPage - 1}
+            </button>
+            <button
+              className={`pageButtons ${
+                currentPage === totalPage ? "bg-[#85AA9F] text-white" : ""
+              }`}
+              onClick={() => handlePage(totalPage)}
+            >
+              {totalPage}
+            </button>
+          </>
+        )}
 
+        {/* Next Page */}
+        <button
+          className="pageButtons flex flex-row justify-center items-center"
+          onClick={() => handlePage(Math.min(totalPage, currentPage + 1))}
+        >
+          <MdNavigateNext />
+        </button>
 
-  <button className="pageButtons" disabled>
-    ...
-  </button>
-
-  {/* Son 2 Sayfa */}
-  {totalPage > 3 && (
-    <>
-      <button
-        className={`pageButtons ${
-          currentPage === totalPage - 1 ? "bg-[#85AA9F] text-white" : ""
-        }`}
-        onClick={() => handlePage(totalPage - 1)}
-      >
-        {totalPage - 1}
-      </button>
-      <button
-        className={`pageButtons ${
-          currentPage === totalPage ? "bg-[#85AA9F] text-white" : ""
-        }`}
-        onClick={() => handlePage(totalPage)}
-      >
-        {totalPage}
-      </button>
-    </>
-  )}
-
-  {/* Next Page */}
-  <button
-    className="pageButtons flex flex-row justify-center items-center"
-    onClick={() => handlePage(Math.min(totalPage, currentPage + 1))}
-  >
-    <MdNavigateNext />
-  </button>
-
-  {/* Last Page */}
-  <button
-    className="pageButtons flex flex-row justify-center items-center"
-    onClick={() => handlePage(totalPage)}
-  >
-    <MdKeyboardDoubleArrowRight />
-  </button>
-</div>
-
+        {/* Last Page */}
+        <button
+          className="pageButtons flex flex-row justify-center items-center"
+          onClick={() => handlePage(totalPage)}
+        >
+          <MdKeyboardDoubleArrowRight />
+        </button>
+      </div>
 
       {isModalOpen && <AddWord closeModal={() => setIsModalOpen(false)} />}
 

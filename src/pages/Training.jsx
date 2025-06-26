@@ -36,10 +36,12 @@ export default function Training() {
     const fetchTasks = async () => {
       try {
         const tasksResponse = await dispatch(getTasks()).unwrap();
+        console.log(tasksResponse)
         setTasks(tasksResponse.tasks || []);
         setUa(tasksResponse.tasks[0].ua || "")
         setEn(tasksResponse.tasks[0].en || "")
         setTotalTask(tasksResponse.tasks.length);
+       
       } catch (e) {
         toast.error("Tasks could not be fetched: " + e);
       } finally {
@@ -50,7 +52,10 @@ export default function Training() {
       fetchTasks();
     }
   }, [dispatch, token]);
-
+useEffect(() => {
+  console.log("Total Task state updated:", totalTask);
+  localStorage.setItem("totalTaskNum",JSON.stringify(totalTask));
+}, [totalTask]);
   const handleSave = async () => {
     if (ua === "" || en === "") return;
 
